@@ -1,0 +1,448 @@
+﻿@page "/dashboard/profesional"
+@layout MainLayout
+@using AgendaFisio.Front.Componentes.Dashboard
+@using AgendaFisio.Front.Models
+@inject SessionService SessionService
+@inject CitasApiService CitasApi
+@inject PacientesApiService PacientesApi
+
+<PageTitle>Dashboard Profesional | AgendaFisio</PageTitle>
+
+<div class="recepcion-page">
+    <div class="recepcion-toolbar">
+        <div class="recepcion-toolbar__left">
+            <button class="toolbar-btn @(_vistaActual == Vista.Diaria ? "toolbar-btn--active" : "")"
+                    @onclick='async () => await CambiarVista(Vista.Diaria)'>
+                Vista Diaria
+            </button>
+
+            <button class="toolbar-btn @(_vistaActual == Vista.Semanal ? "toolbar-btn--active" : "")"
+                    @onclick='async () => await CambiarVista(Vista.Semanal)'>
+                Vista Semanal
+            </button>
+
+            <button class="toolbar-btn" @onclick="IrHoy">↻ Hoy</button>
+        </div>
+
+        <div class="recepcion-toolbar__right">
+            <button class="toolbar-btn toolbar-btn--primary" @onclick="AbrirNuevaCita">+ Nueva Cita</button>
+            <input type="text"
+                   placeholder="Buscar Paciente"
+                   class="toolbar-search__input"
+                   @bind="_busquedaPaciente"
+                   @bind:event="oninput" />
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(_mensaje))
+    {
+        <div class="agenda-mensaje @(_esError ? "agenda-mensaje--error" : "")">@_mensaje</div>
+    }
+
+    @if (_mostrarFormularioCita)
+    {
+        <div class="cita-form-card">
+            <h3>Nueva Cita</h3>
+
+            <div class="cita-tipo-toggle">
+                <button class="toggle-btn @(_citaPacienteExistente ? "toggle-btn--active" : "")"
+                        @onclick="() => _citaPacienteExistente = true">
+                    Paciente existente
+                </button>
+                <button class="toggle-btn @(!_citaPacienteExistente ? "toggle-btn--active" : "")"
+                        @onclick="() => _citaPacienteExistente = false">
+                    Nuevo / Llamada telefónica
+                </button>
+            </div>
+
+            <div class="cita-form-grid">
+                @if (_citaPacienteExistente)
+                {
+                    <div class="form-group form-group--full">
+                        <label>Paciente</label>
+                        <select @bind="_citaPacienteId">
+                            <option value="0">Selecciona un paciente</option>
+                            @foreach (var p in _listaPacientes)
+                            {
+                                <option value="@p.Id">@p.Nombre @p.Apellidos</option>
+                            }
+                        </select>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label>Nombre del paciente</label>
+                        <input @bind="_citaNombrePaciente" placeholder="Nombre y apellidos" />
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input @bind="_citaTelefonoPaciente" placeholder="612 345 678" />
+                    </div>
+                }
+
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select @bind="_citaEstado">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Confirmada">Confirmada</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha y hora inicio</label>
+                    <input type="datetime-local" @bind="_citaInicio" />
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha y hora fin</label>
+                    <input type="datetime-local" @bind="_citaFin" />
+                </div>
+
+                <div class="form-group form-group--full">
+                    <label>Observaciones</label>
+                    <textarea @bind="_citaObservaciones" rows="2" placeholder="Observaciones…"></textarea>
+                </div>
+            </div>
+
+            <div class="cita-form-actions">
+                <button class="toolbar-btn" @onclick="CerrarFormularioCita">Cancelar</button>
+                <button class="toolbar-btn toolbar-btn--primary" @onclick="GuardarCita" disabled="@_guardandoCita">
+                    @(_guardandoCita ? "Guardando..." : "Guardar Cita")
+                </button>
+            </div>
+        </div>
+    }
+
+    <div class="recepcion-date-header">
+        <div class="agenda-nav">
+            <button class="toolbar-btn" @onclick="IrAnterior">←</button>
+
+            @if (_vistaActual == Vista.Diaria)
+            {
+                <h2>@FechaActual.ToString("dddd dd 'de' MMMM", _culture)</h2>
+            }
+            else
+            {
+                <h2>
+                    @InicioSemana.ToString("dddd dd 'de' MMMM", _culture)
+                    –
+                    @InicioSemana.AddDays(6).ToString("dd MMMM", _culture)
+                </h2>
+            }
+
+            <button class="toolbar-btn" @onclick="IrSiguiente">→</button>
+        </div>
+    </div>
+
+    <div class="recepcion-agenda-wrapper">
+        @if (_vistaActual == Vista.Diaria)
+        {
+            <DashboardAgendaDiaria Profesionales="@ProfesionalComoLista"
+                                   Citas="@CitasDiariasFiltradas"
+                                   OnEstadoCambiado="CambiarEstadoCita"
+                                   HoraInicio="8"
+                                   HoraFin="20"
+                                   AltoHoraPx="72" />
+        }
+        else
+        {
+            <DashboardAgendaSemanal FechaInicioSemana="@InicioSemana"
+                                    Citas="@CitasSemanalesFiltradas"
+                                    OnEstadoCambiado="CambiarEstadoCita"
+                                    HoraInicio="8"
+                                    HoraFin="20"
+                                    AltoHoraPx="72" />
+        }
+    </div>
+</div>
+
+@code {
+    private enum Vista { Diaria, Semanal }
+
+    private readonly System.Globalization.CultureInfo _culture = new("es-ES");
+
+    private Vista _vistaActual = Vista.Semanal;
+    private DateTime FechaActual = DateTime.Today;
+    private string _busquedaPaciente = string.Empty;
+
+    private long _profesionalLogueadoId = 1;
+    private string _profesionalNombre = string.Empty;
+
+    private List<DashboardCitaDto> _citas = new();
+    private List<PacienteDto> _listaPacientes = new();
+
+    private string _mensaje = string.Empty;
+    private bool _esError;
+
+    private bool _mostrarFormularioCita;
+    private bool _guardandoCita;
+    private bool _citaPacienteExistente = true;
+    private long _citaPacienteId;
+    private string _citaNombrePaciente = string.Empty;
+    private string _citaTelefonoPaciente = string.Empty;
+    private DateTime _citaInicio = DateTime.Today.AddHours(9);
+    private DateTime _citaFin = DateTime.Today.AddHours(10);
+    private string _citaEstado = "Pendiente";
+    private string _citaObservaciones = string.Empty;
+
+    private DateTime InicioSemana => ObtenerInicioSemana(FechaActual);
+
+    private List<DashboardProfesionalDto> ProfesionalComoLista => new()
+    {
+        new() { Id = (int)_profesionalLogueadoId, Nombre = _profesionalNombre }
+    };
+
+    private List<DashboardCitaDto> CitasDiariasFiltradas =>
+        _citas
+            .Where(c =>
+                c.FechaHoraInicio >= FechaActual.Date &&
+                c.FechaHoraInicio < FechaActual.Date.AddDays(1) &&
+                CoincideBusqueda(c))
+            .OrderBy(c => c.FechaHoraInicio)
+            .ToList();
+
+    private List<DashboardCitaDto> CitasSemanalesFiltradas =>
+        _citas
+            .Where(c =>
+                c.FechaHoraInicio >= InicioSemana.Date &&
+                c.FechaHoraInicio < InicioSemana.Date.AddDays(7) &&
+                CoincideBusqueda(c))
+            .OrderBy(c => c.FechaHoraInicio)
+            .ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _profesionalNombre = await SessionService.GetNombre() ?? "Profesional";
+        await CargarCitas();
+        await CargarPacientes();
+    }
+
+    private async Task CargarCitas()
+    {
+        try
+        {
+            if (_vistaActual == Vista.Diaria)
+            {
+                _citas = await CitasApi.GetDiaAsync(FechaActual, null);
+            }
+            else
+            {
+                var desde = InicioSemana;
+                var hasta = InicioSemana.AddDays(7);
+                _citas = await CitasApi.GetSemanaAsync(desde, hasta, null);
+            }
+
+            _mensaje = string.Empty;
+            _esError = false;
+        }
+        catch
+        {
+            _mensaje = "No se pudieron cargar las citas.";
+            _esError = true;
+        }
+    }
+
+    private async Task CargarPacientes()
+    {
+        try
+        {
+            _listaPacientes = await PacientesApi.GetAllAsync();
+        }
+        catch
+        {
+        }
+    }
+
+    private void AbrirNuevaCita()
+    {
+        _citaPacienteExistente = true;
+        _citaPacienteId = 0;
+        _citaNombrePaciente = string.Empty;
+        _citaTelefonoPaciente = string.Empty;
+        _citaInicio = FechaActual.Date.AddHours(9);
+        _citaFin = FechaActual.Date.AddHours(10);
+        _citaEstado = "Pendiente";
+        _citaObservaciones = string.Empty;
+        _mostrarFormularioCita = true;
+        _mensaje = string.Empty;
+        _esError = false;
+    }
+
+    private async Task GuardarCita()
+    {
+        if (_citaPacienteExistente && _citaPacienteId == 0)
+        {
+            _mensaje = "Selecciona un paciente.";
+            _esError = true;
+            return;
+        }
+
+        if (!_citaPacienteExistente && string.IsNullOrWhiteSpace(_citaNombrePaciente))
+        {
+            _mensaje = "Introduce al menos el nombre del paciente.";
+            _esError = true;
+            return;
+        }
+
+        if (_citaFin <= _citaInicio)
+        {
+            _mensaje = "La hora de fin debe ser posterior a la de inicio.";
+            _esError = true;
+            return;
+        }
+
+        _guardandoCita = true;
+        _mensaje = string.Empty;
+
+        try
+        {
+            string? nombrePaciente = null;
+            string? telefonoPaciente = null;
+
+            if (_citaPacienteExistente && _citaPacienteId > 0)
+            {
+                var paciente = _listaPacientes.FirstOrDefault(p => p.Id == _citaPacienteId);
+                if (paciente is not null)
+                {
+                    nombrePaciente = $"{paciente.Nombre} {paciente.Apellidos}".Trim();
+                    telefonoPaciente = paciente.Telefono;
+                }
+            }
+            else
+            {
+                nombrePaciente = _citaNombrePaciente.Trim();
+                telefonoPaciente = string.IsNullOrWhiteSpace(_citaTelefonoPaciente)
+                    ? null
+                    : _citaTelefonoPaciente.Trim();
+            }
+
+            var request = new CrearCitaRequest
+            {
+                ProfesionalId = _profesionalLogueadoId,
+                PacienteId = _citaPacienteExistente && _citaPacienteId > 0 ? _citaPacienteId : null,
+                NombrePacienteTemporal = nombrePaciente,
+                TelefonoPacienteTemporal = telefonoPaciente,
+                FechaHoraInicioUtc = _citaInicio,
+                FechaHoraFinUtc = _citaFin,
+                Observaciones = string.IsNullOrWhiteSpace(_citaObservaciones)
+                    ? null
+                    : _citaObservaciones.Trim()
+            };
+
+            var (ok, error) = await CitasApi.CrearAsync(request);
+
+            if (ok)
+            {
+                FechaActual = _citaInicio.Date;
+                _mensaje = "Cita creada correctamente.";
+                _esError = false;
+                CerrarFormularioCita();
+                await CargarCitas();
+                StateHasChanged();
+            }
+            else
+            {
+                _mensaje = $"No se pudo crear la cita: {error}";
+                _esError = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            _mensaje = $"Error de conexión al crear la cita: {ex.Message}";
+            _esError = true;
+        }
+        finally
+        {
+            _guardandoCita = false;
+        }
+    }
+
+    private void CerrarFormularioCita()
+    {
+        _mostrarFormularioCita = false;
+        _citaPacienteExistente = true;
+        _citaPacienteId = 0;
+        _citaNombrePaciente = string.Empty;
+        _citaTelefonoPaciente = string.Empty;
+        _citaInicio = FechaActual.Date.AddHours(9);
+        _citaFin = FechaActual.Date.AddHours(10);
+        _citaEstado = "Pendiente";
+        _citaObservaciones = string.Empty;
+    }
+
+    private async Task CambiarVista(Vista vista)
+    {
+        _vistaActual = vista;
+        await CargarCitas();
+    }
+
+    private bool CoincideBusqueda(DashboardCitaDto cita)
+    {
+        if (string.IsNullOrWhiteSpace(_busquedaPaciente))
+            return true;
+
+        var busqueda = _busquedaPaciente.Trim().ToLowerInvariant();
+        return (cita.PacienteNombre ?? string.Empty).ToLowerInvariant().Contains(busqueda);
+    }
+
+    private static DateTime ObtenerInicioSemana(DateTime fecha)
+    {
+        var diff = (7 + (fecha.DayOfWeek - DayOfWeek.Monday)) % 7;
+        return fecha.Date.AddDays(-diff);
+    }
+
+    private async Task IrAnterior()
+    {
+        if (_vistaActual == Vista.Diaria)
+            FechaActual = FechaActual.AddDays(-1);
+        else
+            FechaActual = FechaActual.AddDays(-7);
+
+        await CargarCitas();
+    }
+
+    private async Task IrSiguiente()
+    {
+        if (_vistaActual == Vista.Diaria)
+            FechaActual = FechaActual.AddDays(1);
+        else
+            FechaActual = FechaActual.AddDays(7);
+
+        await CargarCitas();
+    }
+
+    private async Task CambiarEstadoCita((long CitaId, string NuevoEstado) args)
+    {
+        try
+        {
+            var (ok, error) = await CitasApi.CambiarEstadoAsync(args.CitaId, args.NuevoEstado);
+
+            if (ok)
+            {
+                var cita = _citas.FirstOrDefault(c => c.Id == args.CitaId);
+                if (cita is not null)
+                    cita.Estado = args.NuevoEstado;
+
+                _mensaje = string.Empty;
+                _esError = false;
+            }
+            else
+            {
+                _mensaje = $"No se pudo cambiar el estado: {error}";
+                _esError = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            _mensaje = $"Error al cambiar el estado: {ex.Message}";
+            _esError = true;
+        }
+    }
+
+    private async Task IrHoy()
+    {
+        FechaActual = DateTime.Today;
+        await CargarCitas();
+    }
+}

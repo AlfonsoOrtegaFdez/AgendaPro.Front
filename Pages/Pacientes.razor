@@ -1,0 +1,308 @@
+@page "/pacientes"
+@layout MainLayout
+@inject PacientesApiService PacientesApi
+
+<PageTitle>Pacientes | AgendaFisio</PageTitle>
+
+<div class="pacientes-page">
+    <div class="pacientes-toolbar">
+        <div class="pacientes-toolbar__left">
+            <h2 class="pacientes-title">Pacientes</h2>
+            <span class="pacientes-count">@PacientesFiltrados.Count registros</span>
+        </div>
+
+        <div class="pacientes-toolbar__right">
+            <input type="text"
+                   class="pacientes-search"
+                   placeholder="Buscar por nombre, teléfono o email…"
+                   @bind="_busqueda"
+                   @bind:event="oninput" />
+
+            <button class="pacientes-btn pacientes-btn--primary" @onclick="NuevoPaciente">
+                ＋ Nuevo Paciente
+            </button>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(_mensaje))
+    {
+        <div class="pacientes-mensaje @(_esError ? "pacientes-mensaje--error" : "")">@_mensaje</div>
+    }
+
+    @if (_mostrarFormulario)
+    {
+        <div class="pacientes-form-card">
+            <h3>@(_editandoId is null ? "Nuevo Paciente" : "Editar Paciente")</h3>
+
+            <div class="pacientes-form-grid">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input @bind="_formNombre" placeholder="Nombre" />
+                </div>
+
+                <div class="form-group">
+                    <label>Apellidos</label>
+                    <input @bind="_formApellidos" placeholder="Apellidos" />
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input @bind="_formTelefono" placeholder="Teléfono" />
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input @bind="_formEmail" type="email" placeholder="email@ejemplo.com" />
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de nacimiento</label>
+                    <input @bind="_formFechaNacimiento" type="date" />
+                </div>
+
+                <div class="form-group form-group--full">
+                    <label>Observaciones</label>
+                    <textarea @bind="_formObservaciones" rows="3" placeholder="Observaciones del paciente…"></textarea>
+                </div>
+            </div>
+
+            <div class="pacientes-form-actions">
+                <button class="pacientes-btn" @onclick="CancelarFormulario">Cancelar</button>
+                <button class="pacientes-btn pacientes-btn--primary" @onclick="GuardarPaciente" disabled="@_guardando">
+                    @(_guardando ? "Guardando..." : "Guardar")
+                </button>
+            </div>
+        </div>
+    }
+
+    @if (_cargando)
+    {
+        <div class="pacientes-empty">Cargando pacientes...</div>
+    }
+    else
+    {
+        <div class="pacientes-table-wrapper">
+            <table class="pacientes-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Teléfono</th>
+                        <th>Email</th>
+                        <th>Fecha nacimiento</th>
+                        <th>Fecha alta</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (PacientesFiltrados.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="6" class="pacientes-empty">No se encontraron pacientes.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var p in PacientesFiltrados)
+                        {
+                            <tr>
+                                <td class="pacientes-nombre">@p.Nombre @p.Apellidos</td>
+                                <td>@(p.Telefono ?? "—")</td>
+                                <td>@(p.Email ?? "—")</td>
+                                <td>@(p.FechaNacimiento?.ToString("dd/MM/yyyy") ?? "—")</td>
+                                <td>@(p.CreatedAtUtc?.ToLocalTime().ToString("dd/MM/yyyy") ?? "—")</td>
+                                <td class="pacientes-acciones">
+                                    <button class="pacientes-btn pacientes-btn--ghost" @onclick="() => EditarPaciente(p)">
+                                        Editar
+                                    </button>
+                                    <button class="pacientes-btn pacientes-btn--danger" @onclick="() => EliminarPaciente(p.Id)">
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private List<PacienteDto> _pacientes = new();
+    private string _busqueda = string.Empty;
+    private bool _cargando = true;
+    private bool _guardando;
+    private string _mensaje = string.Empty;
+    private bool _esError;
+
+    private bool _mostrarFormulario;
+    private long? _editandoId;
+    private string _formNombre = string.Empty;
+    private string _formApellidos = string.Empty;
+    private string _formTelefono = string.Empty;
+    private string _formEmail = string.Empty;
+    private DateOnly? _formFechaNacimiento;
+    private string _formObservaciones = string.Empty;
+
+    private List<PacienteDto> PacientesFiltrados =>
+        string.IsNullOrWhiteSpace(_busqueda)
+            ? _pacientes
+            : _pacientes.Where(p =>
+                $"{p.Nombre} {p.Apellidos}".Contains(_busqueda, StringComparison.OrdinalIgnoreCase) ||
+                (p.Telefono?.Contains(_busqueda, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (p.Email?.Contains(_busqueda, StringComparison.OrdinalIgnoreCase) ?? false))
+              .ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarPacientes();
+    }
+
+    private async Task CargarPacientes()
+    {
+        _cargando = true;
+
+        try
+        {
+            _pacientes = await PacientesApi.GetAllAsync();
+            _mensaje = string.Empty;
+            _esError = false;
+        }
+        catch
+        {
+            _mensaje = "No se pudieron cargar los pacientes. Verifica la conexión con el servidor.";
+            _esError = true;
+        }
+        finally
+        {
+            _cargando = false;
+        }
+    }
+
+    private void NuevoPaciente()
+    {
+        _editandoId = null;
+        _formNombre = string.Empty;
+        _formApellidos = string.Empty;
+        _formTelefono = string.Empty;
+        _formEmail = string.Empty;
+        _formFechaNacimiento = null;
+        _formObservaciones = string.Empty;
+        _mostrarFormulario = true;
+        _mensaje = string.Empty;
+        _esError = false;
+    }
+
+    private void EditarPaciente(PacienteDto paciente)
+    {
+        _editandoId = paciente.Id;
+        _formNombre = paciente.Nombre;
+        _formApellidos = paciente.Apellidos;
+        _formTelefono = paciente.Telefono ?? string.Empty;
+        _formEmail = paciente.Email ?? string.Empty;
+        _formFechaNacimiento = paciente.FechaNacimiento;
+        _formObservaciones = paciente.Observaciones ?? string.Empty;
+        _mostrarFormulario = true;
+        _mensaje = string.Empty;
+        _esError = false;
+    }
+
+    private async Task GuardarPaciente()
+    {
+        if (string.IsNullOrWhiteSpace(_formNombre) || string.IsNullOrWhiteSpace(_formApellidos))
+        {
+            _mensaje = "El nombre y apellidos son obligatorios.";
+            _esError = true;
+            return;
+        }
+
+        _guardando = true;
+        _mensaje = string.Empty;
+
+        try
+        {
+            var paciente = new PacienteDto
+            {
+                Id = _editandoId ?? 0,
+                Nombre = _formNombre.Trim(),
+                Apellidos = _formApellidos.Trim(),
+                Telefono = string.IsNullOrWhiteSpace(_formTelefono) ? null : _formTelefono.Trim(),
+                Email = string.IsNullOrWhiteSpace(_formEmail) ? null : _formEmail.Trim(),
+                FechaNacimiento = _formFechaNacimiento,
+                Observaciones = string.IsNullOrWhiteSpace(_formObservaciones) ? null : _formObservaciones.Trim(),
+                Activo = true
+            };
+
+            bool ok;
+            string? error;
+
+            if (_editandoId is not null)
+            {
+                (ok, error) = await PacientesApi.ActualizarAsync(paciente);
+            }
+            else
+            {
+                (ok, error) = await PacientesApi.CrearAsync(paciente);
+            }
+
+            if (ok)
+            {
+                _mensaje = _editandoId is not null ? "Paciente actualizado." : "Paciente creado.";
+                _esError = false;
+                CancelarFormulario();
+                await CargarPacientes();
+            }
+            else
+            {
+                _mensaje = $"No se pudo guardar el paciente: {error}";
+                _esError = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            _mensaje = $"Error de conexión al guardar: {ex.Message}";
+            _esError = true;
+        }
+        finally
+        {
+            _guardando = false;
+        }
+    }
+
+    private async Task EliminarPaciente(long id)
+    {
+        try
+        {
+            var ok = await PacientesApi.EliminarAsync(id);
+
+            if (ok)
+            {
+                _mensaje = "Paciente eliminado.";
+                _esError = false;
+                await CargarPacientes();
+            }
+            else
+            {
+                _mensaje = "No se pudo eliminar el paciente.";
+                _esError = true;
+            }
+        }
+        catch
+        {
+            _mensaje = "Error de conexión al eliminar.";
+            _esError = true;
+        }
+    }
+
+    private void CancelarFormulario()
+    {
+        _mostrarFormulario = false;
+        _editandoId = null;
+        _formNombre = string.Empty;
+        _formApellidos = string.Empty;
+        _formTelefono = string.Empty;
+        _formEmail = string.Empty;
+        _formFechaNacimiento = null;
+        _formObservaciones = string.Empty;
+    }
+}

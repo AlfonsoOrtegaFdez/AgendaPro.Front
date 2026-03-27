@@ -1,0 +1,75 @@
+.scheduler {
+    width: 100%;
+    overflow-x: auto;
+    background: white;
+    border-radius: 12px;
+}
+
+.scheduler-grid {
+    display: grid;
+    min-width: 700px;
+    border: 1px solid #e5e7eb;
+}
+
+.scheduler-corner {
+    background: #f9fafb;
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    height: 50px;
+}
+
+.scheduler-header {
+    text-align: center;
+    font-weight: 600;
+    padding: 12px;
+    background: #f9fafb;
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.scheduler-hour {
+    padding: 10px;
+    font-size: 14px;
+    color: #6b7280;
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fcfcfd;
+}
+
+.scheduler-cell {
+    height: 60px;
+    border-bottom: 1px solid #e5e7eb;
+    border-right: 1px solid #e5e7eb;
+    position: relative;
+}
+
+.appointment {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    top: 5px;
+    padding: 6px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: white;
+}
+
+.confirmada {
+    background: #22c55e;
+}
+
+.cancelada {
+    background: #ef4444;
+}
+
+.pendiente {
+    background: #f59e0b;
+}
+
+.time {
+    font-size: 11px;
+}
+
+.patient {
+    font-weight: bold;
+}

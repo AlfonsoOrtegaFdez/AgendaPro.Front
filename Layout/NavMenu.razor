@@ -1,0 +1,39 @@
+﻿@inject SessionService SessionService
+
+<nav class="nav-horizontal">
+    <NavLink class="nav-horizontal__link" href="@_agendaHref" Match="NavLinkMatch.All">
+        Agenda
+    </NavLink>
+    <NavLink class="nav-horizontal__link" href="pacientes">
+        Pacientes
+    </NavLink>
+    <NavLink class="nav-horizontal__link" href="historial">
+        Historial de Consulta
+    </NavLink>
+    <NavLink class="nav-horizontal__link" href="informes">
+        Informes
+    </NavLink>
+    <NavLink class="nav-horizontal__link" href="facturacion">
+        Facturación
+    </NavLink>
+    <NavLink class="nav-horizontal__link" href="configuracion">
+        Configuración
+    </NavLink>
+</nav>
+
+@code {
+    private string _agendaHref = "dashboard/profesional";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var rol = await SessionService.GetRol();
+            _agendaHref = rol == "Recepcionista"
+                ? "dashboard/recepcion"
+                : "dashboard/profesional";
+
+            StateHasChanged();
+        }
+    }
+}

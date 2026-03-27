@@ -1,0 +1,74 @@
+﻿@inherits LayoutComponentBase
+@inject SessionService SessionService
+
+<div class="shell">
+    <aside class="shell-sidebar">
+        <div class="shell-sidebar__brand">
+            <div class="shell-sidebar__brand-icon">✚</div>
+        </div>
+
+        <nav class="shell-sidebar__nav">
+            <a href="@_agendaHref" class="shell-sidebar__item shell-sidebar__item--active" title="Inicio">
+                <span>⌂</span>
+            </a>
+            <a href="/pacientes" class="shell-sidebar__item" title="Pacientes">
+                <span>👤</span>
+            </a>
+            <a href="/informes" class="shell-sidebar__item" title="Informes">
+                <span>📄</span>
+            </a>
+        </nav>
+    </aside>
+
+    <div class="shell-main">
+        <header class="shell-topbar">
+            <div class="shell-topbar__left">
+                <div class="shell-logo">
+                    <div class="shell-logo__icon">✚</div>
+                    <span>@_nombreClinica</span>
+                </div>
+
+                <nav class="shell-menu">
+                    <a href="@_agendaHref" class="shell-menu__link shell-menu__link--active">Agenda</a>
+                    <a href="/pacientes" class="shell-menu__link">Pacientes</a>
+                    <a href="/historial" class="shell-menu__link">Historial de Consulta</a>
+                    <a href="/informes" class="shell-menu__link">Informes</a>
+                    <a href="/facturacion" class="shell-menu__link">Facturación</a>
+                    <a href="/configuracion" class="shell-menu__link">Configuración</a>
+                </nav>
+            </div>
+
+            <div class="shell-user">
+                <div class="shell-user__avatar"></div>
+                <span class="shell-user__name">@_nombreUsuario</span>
+                <span class="shell-user__caret">⌄</span>
+            </div>
+        </header>
+
+        <main class="shell-content">
+            @Body
+        </main>
+    </div>
+</div>
+
+@code {
+    private string _agendaHref = "/dashboard/profesional";
+    private string _nombreUsuario = "";
+    private string _nombreClinica = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var rol = await SessionService.GetRol();
+            _agendaHref = rol == "Recepcionista"
+                ? "/dashboard/recepcion"
+                : "/dashboard/profesional";
+
+            _nombreUsuario = await SessionService.GetNombre() ?? "";
+            _nombreClinica = await SessionService.GetNombreClinica() ?? "";
+
+            StateHasChanged();
+        }
+    }
+}

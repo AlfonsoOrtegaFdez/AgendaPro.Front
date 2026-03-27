@@ -1,0 +1,195 @@
+/* ── Container ── */
+.pro-scheduler[b-0fo85wfxij] {
+    background: #fff;
+    border: 1px solid #e2e5ea;
+    border-radius: 14px;
+    overflow-x: auto;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.pro-scheduler__grid[b-0fo85wfxij] {
+    display: grid;
+    min-width: 1100px;
+}
+
+/* ── Header row ── */
+.pro-scheduler__corner[b-0fo85wfxij] {
+    height: 58px;
+    background: #fff;
+    border-right: 1px solid #e8eaee;
+    border-bottom: 1px solid #e8eaee;
+}
+
+.pro-scheduler__header[b-0fo85wfxij] {
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-right: 1px solid #e8eaee;
+    border-bottom: 1px solid #e8eaee;
+}
+
+.pro-scheduler__day-label[b-0fo85wfxij] {
+    font-size: .85rem;
+    font-weight: 700;
+    color: #4b5563;
+    text-transform: capitalize;
+}
+
+/* ── Hours column ── */
+.pro-scheduler__hours[b-0fo85wfxij] {
+    display: grid;
+    background: #fff;
+    border-right: 1px solid #e8eaee;
+}
+
+.pro-scheduler__hour[b-0fo85wfxij] {
+    padding: 0 12px;
+    font-weight: 500;
+    color: #9ca3af;
+    font-size: .82rem;
+    border-bottom: 1px solid #e8eaee;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 6px;
+}
+
+/* ── Day columns ── */
+.pro-scheduler__column[b-0fo85wfxij] {
+    position: relative;
+    border-right: 1px solid #e8eaee;
+    background: #fff;
+}
+
+.pro-scheduler__column-lines[b-0fo85wfxij] {
+    position: absolute;
+    inset: 0;
+    display: grid;
+}
+
+.pro-scheduler__slot[b-0fo85wfxij] {
+    border-bottom: 1px solid #f3f4f6;
+    box-sizing: border-box;
+}
+
+.pro-scheduler__slot:nth-child(even)[b-0fo85wfxij] {
+    border-bottom: 1px solid #e8eaee;
+}
+
+/* ── Appointment blocks ── */
+.pro-appointment[b-0fo85wfxij] {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    border-radius: 8px;
+    padding: 6px 8px;
+    overflow: hidden;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    cursor: pointer;
+    border: none;
+    transition: box-shadow .15s;
+}
+
+.pro-appointment:hover[b-0fo85wfxij] {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.pro-appointment__row[b-0fo85wfxij] {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pro-appointment__time[b-0fo85wfxij] {
+    font-size: .65rem;
+    font-weight: 700;
+}
+
+.pro-appointment__patient[b-0fo85wfxij] {
+    font-size: .78rem;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pro-appointment__phone[b-0fo85wfxij] {
+    font-size: .68rem;
+    line-height: 1.15;
+    opacity: .85;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Estado colors ── */
+.pro-appointment--confirmada[b-0fo85wfxij] {
+    background: #3b82f6;
+    color: #fff;
+}
+
+.pro-appointment--cancelada[b-0fo85wfxij] {
+    background: #ef4444;
+    color: #fff;
+}
+
+.pro-appointment--pendiente[b-0fo85wfxij] {
+    background: #fbbf24;
+    color: #78350f;
+}
+
+.pro-appointment--completada[b-0fo85wfxij] {
+    background: #93c5fd;
+    color: #1e3a5f;
+}
+
+.pro-appointment--default[b-0fo85wfxij] {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.pro-appointment--noasistio[b-0fo85wfxij] {
+    background: #6b7280;
+    color: #fff;
+}
+
+/* ── Estado menu ── */
+.pro-estado-menu[b-0fo85wfxij] {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 6px;
+    padding: 6px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    z-index: 10;
+}
+
+.pro-estado-menu__item[b-0fo85wfxij] {
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: .7rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+    transition: opacity .15s;
+}
+
+.pro-estado-menu__item:hover[b-0fo85wfxij] {
+    opacity: .85;
+}
+
+.pro-estado-overlay[b-0fo85wfxij] {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: transparent;
+}

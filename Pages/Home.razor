@@ -1,0 +1,158 @@
+﻿@page "/"
+@inject NavigationManager Nav
+@layout EmptyLayout
+
+<PageTitle>AgendaFisio</PageTitle>
+
+<div class="landing-page">
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="badge">Software para clínicas de fisioterapia</span>
+
+                <h1>Gestiona tu clínica de fisioterapia de forma simple y profesional</h1>
+
+                <p class="subtitle">
+                    Organiza citas, pacientes y fisioterapeutas desde una sola plataforma.
+                    Diseñado para clínicas modernas que quieren ahorrar tiempo y trabajar mejor.
+                </p>
+
+                <div class="hero-actions">
+                    <button class="btn btn-primary" @onclick="@(() => Nav.NavigateTo("/login"))">
+                        Iniciar sesión
+                    </button>
+
+                    <button class="btn btn-secondary" @onclick="@(() => Nav.NavigateTo("/registro"))">
+                        Registrarse
+                    </button>
+                </div>
+
+                <div class="hero-features">
+                    <div class="feature-pill">Agenda de citas</div>
+                    <div class="feature-pill">Pacientes</div>
+                    <div class="feature-pill">Fisioterapeutas</div>
+                    <div class="feature-pill">Multi-clínica</div>
+                </div>
+            </div>
+
+            <div class="hero-card">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div>
+                            <p class="card-kicker">AgendaFisioterapeuta</p>
+                            <h3>Panel de hoy</h3>
+                        </div>
+                        <div class="status-dot"></div>
+                    </div>
+
+                    <div class="mini-stats">
+                        <div class="mini-stat">
+                            <span class="stat-label">Citas hoy</span>
+                            <span class="stat-value">12</span>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="stat-label">Pacientes</span>
+                            <span class="stat-value">248</span>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="stat-label">Fisioterapeutas</span>
+                            <span class="stat-value">4</span>
+                        </div>
+                    </div>
+
+                    <div class="schedule-box">
+                        <div class="schedule-item">
+                            <span class="hour">09:00</span>
+                            <div>
+                                <strong>Primera valoración</strong>
+                                <p>Laura Martín · Juan Pérez</p>
+                            </div>
+                        </div>
+
+                        <div class="schedule-item">
+                            <span class="hour">10:00</span>
+                            <div>
+                                <strong>Revisión lumbar</strong>
+                                <p>Carlos Ruiz · Marta López</p>
+                            </div>
+                        </div>
+
+                        <div class="schedule-item">
+                            <span class="hour">11:30</span>
+                            <div>
+                                <strong>Fisio deportiva</strong>
+                                <p>María Gil · Pedro Sánchez</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="benefits">
+        <div class="section-title">
+            <span>Todo lo que necesitas</span>
+            <h2>Una plataforma pensada para clínicas de fisioterapia</h2>
+        </div>
+
+        <div class="benefit-grid">
+            <div class="benefit-card">
+                <div class="icon-circle">📅</div>
+                <h3>Agenda de citas</h3>
+                <p>Organiza la agenda diaria y evita solapes entre profesionales.</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="icon-circle">🧑‍⚕️</div>
+                <h3>Gestión de fisioterapeutas</h3>
+                <p>Administra fácilmente los profesionales y su disponibilidad.</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="icon-circle">🧾</div>
+                <h3>Pacientes centralizados</h3>
+                <p>Consulta y actualiza la información de tus pacientes desde cualquier lugar.</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="icon-circle">🔐</div>
+                <h3>Acceso seguro por clínica</h3>
+                <p>Cada empresa trabaja en su propio entorno de forma privada y segura.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="access-section">
+        <div class="section-title">
+            <span>Empieza ahora</span>
+            <h2>Elige cómo quieres acceder</h2>
+        </div>
+
+        <div class="access-grid">
+            <div class="access-card">
+                <h3>Iniciar sesión</h3>
+                <p>Accede a tu clínica con tu correo y contraseña.</p>
+                <button class="btn btn-primary w-full" @onclick="@(() => Nav.NavigateTo("/login"))">
+                    Ir a iniciar sesión
+                </button>
+            </div>
+
+            <div class="access-card">
+                <h3>Registrar clínica</h3>
+                <p>Crea tu clínica y obtén tu código de registro para empleados.</p>
+                <button class="btn btn-secondary w-full" @onclick="@(() => Nav.NavigateTo("/registro/clinica"))">
+                    Registrar clínica
+                </button>
+            </div>
+
+            <div class="access-card">
+                <h3>Registrar empleado</h3>
+                <p>Únete a una clínica existente con tu código de registro.</p>
+                <button class="btn btn-secondary w-full" @onclick="@(() => Nav.NavigateTo("/registro/empleado"))">
+                    Registrar empleado
+                </button>
+            </div>
+        </div>
+    </section>
+</div>

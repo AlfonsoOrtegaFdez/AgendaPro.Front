@@ -1,0 +1,149 @@
+﻿@page "/registro/empleado"
+@layout EmptyLayout
+@using AgendaFisio.Front.Models.Auth
+@inject AuthService AuthService
+@inject NavigationManager Nav
+
+<PageTitle>Registrar empleado | AgendaFisio</PageTitle>
+
+<div class="registro-clinica-wrapper">
+    <div class="registro-clinica-box">
+        <div class="registro-left">
+            <span class="registro-badge">Registro de empleado</span>
+            <h1>Únete a tu clínica en AgendaFisio</h1>
+            <p>
+                Introduce tus datos, selecciona tu rol y usa el código de registro
+                que te ha facilitado tu clínica para crear tu acceso.
+            </p>
+
+            <ul class="registro-points">
+                <li>Acceso rápido a tu clínica</li>
+                <li>Rol de recepcionista o profesional</li>
+                <li>Registro seguro por código</li>
+                <li>Listo para empezar a trabajar</li>
+            </ul>
+        </div>
+
+        <div class="registro-right">
+            @if (!registroCompletado)
+            {
+                <h2>Registrar empleado</h2>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input @bind="model.Nombre" placeholder="Laura" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Apellidos</label>
+                        <input @bind="model.Apellidos" placeholder="Martín" />
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Email</label>
+                        <input @bind="model.Email" type="email" placeholder="empleado@clinica.com" />
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Código de registro</label>
+                        <input @bind="model.CodigoRegistro" placeholder="Ej. CLN-AB12CD34" />
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Rol</label>
+                        <InputSelect @bind-Value="model.Rol" class="form-control">
+                            <option value="">Selecciona un rol</option>
+                            <option value="Recepcionista">Recepcionista</option>
+                            <option value="Profesional">Profesional</option>
+                        </InputSelect>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Contraseña</label>
+                        <input @bind="model.Password" type="password" placeholder="••••••••" />
+                    </div>
+                </div>
+
+                <button class="btn btn-primary w-full" @onclick="Registrar" disabled="@loading">
+                    @(loading ? "Registrando..." : "Crear acceso")
+                </button>
+
+                @if (!string.IsNullOrWhiteSpace(error))
+                {
+                    <div class="error-box">@error</div>
+                }
+
+                <p class="form-footer">
+                    ¿Ya tienes cuenta?
+                    <a href="/login">Inicia sesión</a>
+                </p>
+            }
+            else
+            {
+                <div class="success-state">
+                    <div class="success-icon">✅</div>
+                    <h2>Empleado registrado correctamente</h2>
+                    <p>@mensajeExito</p>
+
+                    <p class="success-help">
+                        Ya puedes iniciar sesión con tu email y contraseña.
+                    </p>
+
+                    <div class="success-actions">
+                        <button class="btn btn-primary" @onclick="@(() => Nav.NavigateTo("/login"))">
+                            Ir a iniciar sesión
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private RegistroEmpleadoRequest model = new();
+    private bool loading;
+    private bool registroCompletado;
+    private string error = "";
+    private string mensajeExito = "";
+
+    private async Task Registrar()
+    {
+        error = "";
+        loading = true;
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(model.Nombre) ||
+                string.IsNullOrWhiteSpace(model.Apellidos) ||
+                string.IsNullOrWhiteSpace(model.Email) ||
+                string.IsNullOrWhiteSpace(model.Password) ||
+                string.IsNullOrWhiteSpace(model.CodigoRegistro) ||
+                string.IsNullOrWhiteSpace(model.Rol))
+            {
+                error = "Completa todos los campos obligatorios.";
+                return;
+            }
+
+            var response = await AuthService.RegistrarEmpleado(model);
+
+            if (response is null)
+            {
+                error = "No se pudo completar el registro del empleado.";
+                return;
+            }
+
+            registroCompletado = true;
+            mensajeExito = response.Mensaje;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+}

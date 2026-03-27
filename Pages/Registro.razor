@@ -1,0 +1,31 @@
+﻿@page "/registro"
+@inject NavigationManager Nav
+@layout EmptyLayout
+
+<PageTitle>Registro | AgendaFisio</PageTitle>
+
+<div class="registro-wrapper">
+    <div class="registro-box">
+        <span class="registro-badge">Crear acceso</span>
+        <h1>¿Cómo quieres registrarte?</h1>
+        <p>Selecciona la opción que mejor se adapta a tu situación dentro de AgendaFisio.</p>
+
+        <div class="registro-cards">
+            <div class="registro-card">
+                <h3>Registrar clínica</h3>
+                <p>Crea una nueva clínica y obtén tu código de registro para empleados.</p>
+                <button class="btn btn-primary w-full" @onclick="@(() => Nav.NavigateTo("/registro/clinica"))">
+                    Continuar como clínica
+                </button>
+            </div>
+
+            <div class="registro-card">
+                <h3>Registrar empleado</h3>
+                <p>Únete a una clínica ya existente usando tu código de registro.</p>
+                <button class="btn btn-secondary w-full" @onclick="@(() => Nav.NavigateTo("/registro/empleado"))">
+                    Continuar como empleado
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

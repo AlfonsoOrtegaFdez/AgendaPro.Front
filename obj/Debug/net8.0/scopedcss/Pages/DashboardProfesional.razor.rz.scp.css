@@ -1,0 +1,181 @@
+.recepcion-page[b-5jw73efalo] {
+    padding: 20px;
+    background: #f7f8fb;
+    min-height: 100vh;
+}
+
+.recepcion-toolbar[b-5jw73efalo] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    background: white;
+    padding: 14px 16px;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.recepcion-toolbar__left[b-5jw73efalo],
+.recepcion-toolbar__right[b-5jw73efalo] {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.toolbar-btn[b-5jw73efalo] {
+    border: 1px solid #dcdfe6;
+    background: white;
+    color: #2c3e50;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.toolbar-btn--active[b-5jw73efalo] {
+    background: #eef4ff;
+    border-color: #5b8def;
+    color: #2f6fe4;
+    font-weight: 600;
+}
+
+.toolbar-btn--primary[b-5jw73efalo] {
+    background: #2f6fe4;
+    color: white;
+    border-color: #2f6fe4;
+    font-weight: 600;
+}
+
+.toolbar-search__input[b-5jw73efalo] {
+    border: 1px solid #dcdfe6;
+    padding: 10px 12px;
+    border-radius: 10px;
+    min-width: 220px;
+    outline: none;
+}
+
+.recepcion-date-header[b-5jw73efalo] {
+    margin-bottom: 16px;
+}
+
+    .recepcion-date-header h2[b-5jw73efalo] {
+        margin: 0;
+        font-size: 24px;
+        color: #1f2937;
+        text-transform: capitalize;
+    }
+
+.recepcion-agenda-wrapper[b-5jw73efalo] {
+    background: white;
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+/* ── Mensaje ── */
+
+.agenda-mensaje[b-5jw73efalo] {
+    padding: 10px 16px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.agenda-mensaje--error[b-5jw73efalo] {
+    background: #fef2f2;
+    color: #b91c1c;
+    border-color: #fecaca;
+}
+
+/* ── Formulario cita ── */
+
+.cita-form-card[b-5jw73efalo] {
+    background: white;
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+    .cita-form-card h3[b-5jw73efalo] {
+        margin: 0 0 12px;
+        font-size: 18px;
+        color: #1f2937;
+    }
+
+.cita-tipo-toggle[b-5jw73efalo] {
+    display: flex;
+    gap: 0;
+    margin-bottom: 16px;
+    border: 1px solid #d4d7de;
+    border-radius: 10px;
+    overflow: hidden;
+    width: fit-content;
+}
+
+.toggle-btn[b-5jw73efalo] {
+    padding: 8px 18px;
+    border: none;
+    background: #f3f4f6;
+    color: #6b7280;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.toggle-btn--active[b-5jw73efalo] {
+    background: #2f6fe4;
+    color: white;
+    font-weight: 600;
+}
+
+.cita-form-grid[b-5jw73efalo] {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.form-group[b-5jw73efalo] {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+    .form-group label[b-5jw73efalo] {
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .form-group input[b-5jw73efalo],
+    .form-group textarea[b-5jw73efalo],
+    .form-group select[b-5jw73efalo] {
+        border: 1px solid #d4d7de;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 14px;
+        outline: none;
+        color: #1f2937;
+        background: #fafafa;
+    }
+
+    .form-group textarea[b-5jw73efalo] {
+        resize: vertical;
+    }
+
+.form-group--full[b-5jw73efalo] {
+    grid-column: 1 / -1;
+}
+
+.cita-form-actions[b-5jw73efalo] {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+}

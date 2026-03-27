@@ -1,0 +1,170 @@
+.shell {
+    display: flex;
+    min-height: 100vh;
+    background: #f3f4f6;
+    color: #2f3640;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.shell-sidebar {
+    width: 72px;
+    background: #efefef;
+    border-right: 1px solid #dddddd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 18px;
+    flex-shrink: 0;
+}
+
+.shell-sidebar__brand {
+    margin-bottom: 22px;
+}
+
+.shell-sidebar__brand-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #21b08d;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.shell-sidebar__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.shell-sidebar__item {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    color: #5d6672;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    font-size: 18px;
+}
+
+    .shell-sidebar__item--active,
+    .shell-sidebar__item:hover {
+        background: #ffffff;
+        box-shadow: 0 1px 2px rgba(0,0,0,.06);
+    }
+
+.shell-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.shell-topbar {
+    height: 64px;
+    background: #ffffff;
+    border-bottom: 1px solid #dddddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    gap: 16px;
+}
+
+.shell-topbar__left {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    min-width: 0;
+    flex: 1;
+}
+
+.shell-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 17px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.shell-logo__icon {
+    color: #21b08d;
+    font-size: 22px;
+    line-height: 1;
+}
+
+.shell-menu {
+    display: flex;
+    align-items: stretch;
+    gap: 18px;
+    min-width: 0;
+    overflow-x: auto;
+}
+
+.shell-menu__link {
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 22px 0 16px;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+}
+
+.shell-menu__link--active {
+    color: #1f2937;
+    border-bottom-color: #168b76;
+    font-weight: 700;
+}
+
+.shell-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+.shell-user__avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #d9d9d9, #bfbfbf);
+    flex-shrink: 0;
+}
+
+.shell-user__name {
+    font-size: 15px;
+    color: #374151;
+}
+
+.shell-user__caret {
+    color: #6b7280;
+}
+
+.shell-content {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (max-width: 1200px) {
+    .shell-menu {
+        gap: 12px;
+    }
+}
+
+@media (max-width: 900px) {
+    .shell-sidebar {
+        display: none;
+    }
+
+    .shell-topbar {
+        padding: 0 12px;
+    }
+}

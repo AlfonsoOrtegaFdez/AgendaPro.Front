@@ -1,0 +1,77 @@
+﻿@page "/dashboard/recepcion"
+@using AgendaFisio.Front.Componentes.Dashboard
+@using AgendaFisio.Front.Models
+
+<PageTitle>Recepción | AgendaFisio</PageTitle>
+
+<div class="recepcion-page">
+    <div class="recepcion-toolbar">
+        <div class="recepcion-toolbar__left">
+            <button class="toolbar-btn toolbar-btn--active">Vista Diaria</button>
+            <button class="toolbar-btn">Vista Semanal</button>
+            <button class="toolbar-btn">↻ Hoy</button>
+        </div>
+
+        <div class="recepcion-toolbar__right">
+            <button class="toolbar-btn toolbar-btn--primary">+ Nueva Cita</button>
+            <button class="toolbar-btn">☰ Filtrar por Profesional</button>
+            <input type="text" placeholder="Buscar Paciente" class="toolbar-search__input" />
+        </div>
+    </div>
+
+    <div class="recepcion-date-header">
+        <h2>@DateTime.Today.ToString("dddd dd 'de' MMMM", new System.Globalization.CultureInfo("es-ES"))</h2>
+    </div>
+
+    <div class="recepcion-agenda-wrapper">
+        <DashboardAgendaDiaria Profesionales="@Profesionales"
+                               Citas="@CitasHoy"
+                               HoraInicio="8"
+                               HoraFin="20"
+                               AltoHoraPx="80" />
+    </div>
+</div>
+
+@code {
+    private List<DashboardProfesionalDto> Profesionales = new()
+    {
+        new() { Id = 1, Nombre = "Raquel Martín" },
+        new() { Id = 2, Nombre = "César Sánchez" },
+        new() { Id = 3, Nombre = "Laura Gómez" },
+        new() { Id = 4, Nombre = "Juan Pérez" }
+    };
+
+    private List<DashboardCitaDto> CitasHoy = new()
+    {
+        new()
+        {
+            Id = 1,
+            ProfesionalId = 1,
+            FechaHoraInicioUtc = DateTime.Today.AddHours(9).AddMinutes(15),
+            FechaHoraFinUtc = DateTime.Today.AddHours(10).AddMinutes(15),
+            NombrePacienteTemporal = "Raquel Martín",
+            TelefonoPacienteTemporal = "654321347",
+            Estado = "Confirmada"
+        },
+        new()
+        {
+            Id = 2,
+            ProfesionalId = 2,
+            FechaHoraInicioUtc = DateTime.Today.AddHours(10).AddMinutes(30),
+            FechaHoraFinUtc = DateTime.Today.AddHours(11).AddMinutes(30),
+            NombrePacienteTemporal = "César Sánchez",
+            TelefonoPacienteTemporal = "624321987",
+            Estado = "Pendiente"
+        },
+        new()
+        {
+            Id = 3,
+            ProfesionalId = 3,
+            FechaHoraInicioUtc = DateTime.Today.AddHours(12),
+            FechaHoraFinUtc = DateTime.Today.AddHours(12).AddMinutes(45),
+            NombrePacienteTemporal = "Iván García",
+            TelefonoPacienteTemporal = "684593123",
+            Estado = "Completada"
+        }
+    };
+}

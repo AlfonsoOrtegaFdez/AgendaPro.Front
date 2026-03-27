@@ -1,0 +1,39 @@
+.nav-horizontal[b-ccd554301g] {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+}
+
+.nav-horizontal__link[b-ccd554301g] {
+    padding: .4rem .75rem;
+    font-size: .88rem;
+    font-weight: 600;
+    color: #64748b;
+    text-decoration: none;
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: color .15s, background .15s;
+}
+
+.nav-horizontal__link:hover[b-ccd554301g] {
+    color: #1e293b;
+    background: #f1f5f9;
+}
+
+.nav-horizontal__link.active[b-ccd554301g] {
+    color: #1e293b;
+    border-bottom: 2px solid #1e293b;
+    border-radius: 0;
+}
+
+@media (max-width: 768px) {
+    .nav-horizontal[b-ccd554301g] {
+        overflow-x: auto;
+        gap: .15rem;
+    }
+
+    .nav-horizontal__link[b-ccd554301g] {
+        font-size: .8rem;
+        padding: .35rem .5rem;
+    }
+}

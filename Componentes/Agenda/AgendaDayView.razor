@@ -1,0 +1,42 @@
+﻿@using AgendaFisio.Front.Models
+
+<div class="agenda-board">
+    <div class="agenda-day-grid">
+        <div class="agenda-day-grid__corner"></div>
+        <div class="agenda-day-grid__header">Citas del día</div>
+
+        @foreach (var hora in Horas)
+        {
+            <div class="agenda-day-grid__hour">@hora</div>
+
+            <div class="agenda-day-grid__cell">
+                @foreach (var cita in Citas.Where(c => c.FechaHoraInicio.ToString("H:mm") == hora))
+                {
+                    <div class="agenda-event @GetEstadoClass(cita.Estado)">
+                        @cita.PacienteNombre
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public DateTime Fecha { get; set; }
+    [Parameter] public List<CitaAgendaVm> Citas { get; set; } = new();
+
+    private List<string> Horas = new()
+    {
+        "8:00","9:00","10:00","11:00","12:00","13:00",
+        "14:00","15:00","16:00","17:00","18:00","19:00","20:00"
+    };
+
+    private string GetEstadoClass(string estado) => estado.ToLower() switch
+    {
+        "confirmada" => "event-green",
+        "cancelada" => "event-red",
+        "pendiente" => "event-yellow",
+        "completada" => "event-blue",
+        _ => "event-default"
+    };
+}}

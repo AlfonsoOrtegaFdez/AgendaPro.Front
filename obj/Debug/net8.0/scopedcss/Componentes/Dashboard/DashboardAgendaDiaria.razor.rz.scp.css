@@ -1,0 +1,200 @@
+/* ── Container ── */
+.pro-scheduler[b-v1rjxi6zr2] {
+    background: #fff;
+    border: 1px solid #e2e5ea;
+    border-radius: 14px;
+    overflow-x: auto;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.pro-scheduler__grid[b-v1rjxi6zr2] {
+    display: grid;
+    min-width: 700px;
+}
+
+/* ── Header row ── */
+.pro-scheduler__corner[b-v1rjxi6zr2] {
+    height: 72px;
+    background: #fff;
+    border-right: 1px solid #e8eaee;
+    border-bottom: 1px solid #e8eaee;
+}
+
+.pro-scheduler__header[b-v1rjxi6zr2] {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-right: 1px solid #e8eaee;
+    border-bottom: 1px solid #e8eaee;
+}
+
+.pro-scheduler__prof-label[b-v1rjxi6zr2] {
+    font-size: .9rem;
+    font-weight: 700;
+    color: #4b5563;
+}
+
+/* ── Hours column ── */
+.pro-scheduler__hours[b-v1rjxi6zr2] {
+    display: grid;
+    background: #fff;
+    border-right: 1px solid #e8eaee;
+}
+
+.pro-scheduler__hour[b-v1rjxi6zr2] {
+    padding: 0 12px;
+    font-weight: 500;
+    color: #9ca3af;
+    font-size: .82rem;
+    border-bottom: 1px solid #e8eaee;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 6px;
+}
+
+/* ── Professional columns ── */
+.pro-scheduler__column[b-v1rjxi6zr2] {
+    position: relative;
+    border-right: 1px solid #e8eaee;
+    background: #fff;
+}
+
+.pro-scheduler__column-lines[b-v1rjxi6zr2] {
+    position: absolute;
+    inset: 0;
+    display: grid;
+}
+
+.pro-scheduler__slot[b-v1rjxi6zr2] {
+    border-bottom: 1px solid #f3f4f6;
+    box-sizing: border-box;
+}
+
+.pro-scheduler__slot:nth-child(even)[b-v1rjxi6zr2] {
+    border-bottom: 1px solid #e8eaee;
+}
+
+/* ── Appointment blocks ── */
+.pro-appointment[b-v1rjxi6zr2] {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    border-radius: 8px;
+    padding: 8px 10px;
+    overflow-y: auto;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    cursor: pointer;
+    border: none;
+    transition: box-shadow .15s;
+}
+
+.pro-appointment:hover[b-v1rjxi6zr2] {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.pro-appointment__row[b-v1rjxi6zr2] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+}
+
+.pro-appointment__time[b-v1rjxi6zr2] {
+    font-size: .7rem;
+    font-weight: 700;
+}
+
+.pro-appointment__icon[b-v1rjxi6zr2] {
+    font-size: .7rem;
+    flex-shrink: 0;
+}
+
+.pro-appointment__patient[b-v1rjxi6zr2] {
+    font-size: .82rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.pro-appointment__phone[b-v1rjxi6zr2] {
+    font-size: .72rem;
+    line-height: 1.15;
+    opacity: .85;
+}
+
+/* ── Estado colors ── */
+.pro-appointment--confirmada[b-v1rjxi6zr2] {
+    background: #3b82f6;
+    color: #fff;
+}
+
+.pro-appointment--cancelada[b-v1rjxi6zr2] {
+    background: #ef4444;
+    color: #fff;
+}
+
+.pro-appointment--pendiente[b-v1rjxi6zr2] {
+    background: #fbbf24;
+    color: #78350f;
+}
+
+.pro-appointment--completada[b-v1rjxi6zr2] {
+    background: #93c5fd;
+    color: #1e3a5f;
+}
+
+.pro-appointment--default[b-v1rjxi6zr2] {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.pro-appointment--noasistio[b-v1rjxi6zr2] {
+    background: #6b7280;
+    color: #fff;
+}
+
+/* ── Estado menu ── */
+.pro-estado-menu[b-v1rjxi6zr2] {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 6px;
+    padding: 6px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    z-index: 10;
+}
+
+.pro-estado-menu__item[b-v1rjxi6zr2] {
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: .75rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+    transition: opacity .15s;
+}
+
+.pro-estado-menu__item:hover[b-v1rjxi6zr2] {
+    opacity: .85;
+}
+
+.pro-estado-overlay[b-v1rjxi6zr2] {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: transparent;
+}
+
+@media (max-width: 900px) {
+    .pro-scheduler[b-v1rjxi6zr2] {
+        border-radius: 10px;
+    }
+}

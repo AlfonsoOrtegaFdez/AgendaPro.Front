@@ -1,0 +1,76 @@
+﻿.recepcion-page {
+    padding: 20px;
+    background: #f7f8fb;
+    min-height: 100vh;
+}
+
+.recepcion-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    background: white;
+    padding: 14px 16px;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.recepcion-toolbar__left,
+.recepcion-toolbar__right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.toolbar-btn {
+    border: 1px solid #dcdfe6;
+    background: white;
+    color: #2c3e50;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.toolbar-btn--active {
+    background: #eef4ff;
+    border-color: #5b8def;
+    color: #2f6fe4;
+    font-weight: 600;
+}
+
+.toolbar-btn--primary {
+    background: #2f6fe4;
+    color: white;
+    border-color: #2f6fe4;
+    font-weight: 600;
+}
+
+.toolbar-search__input {
+    border: 1px solid #dcdfe6;
+    padding: 10px 12px;
+    border-radius: 10px;
+    min-width: 220px;
+    outline: none;
+}
+
+.recepcion-date-header {
+    margin-bottom: 16px;
+}
+
+    .recepcion-date-header h2 {
+        margin: 0;
+        font-size: 24px;
+        color: #1f2937;
+        text-transform: capitalize;
+    }
+
+.recepcion-agenda-wrapper {
+    background: white;
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}

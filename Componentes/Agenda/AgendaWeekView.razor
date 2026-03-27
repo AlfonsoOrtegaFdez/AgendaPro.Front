@@ -1,0 +1,58 @@
+﻿@using AgendaFisio.Front.Models
+
+<div class="agenda-board">
+    <div class="agenda-grid">
+        <div class="agenda-grid__corner"></div>
+
+        @foreach (var dia in DiasSemana)
+        {
+            <div class="agenda-grid__day-header">
+                @dia.ToString("dddd dd MMM", _culture)
+            </div>
+        }
+
+        @foreach (var hora in Horas)
+        {
+            <div class="agenda-grid__hour">@hora</div>
+
+            @foreach (var dia in DiasSemana)
+            {
+                <div class="agenda-grid__cell">
+                    @foreach (var cita in Citas.Where(c =>
+                                c.FechaHoraInicio.Date == dia.Date &&
+                                c.FechaHoraInicio.ToString("H:mm") == hora))
+                    {
+                        <div class="agenda-event @GetEstadoClass(cita.Estado)">
+                            @cita.PacienteNombre
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    private readonly System.Globalization.CultureInfo _culture = new("es-ES");
+
+    [Parameter] public DateTime FechaInicioSemana { get; set; }
+    [Parameter] public List<CitaAgendaVm> Citas { get; set; } = new();
+
+    private IEnumerable<DateTime> DiasSemana =>
+        Enumerable.Range(0, 7).Select(i => FechaInicioSemana.Date.AddDays(i));
+
+    private List<string> Horas = new()
+    {
+        "8:00","9:00","10:00","11:00","12:00","13:00",
+        "14:00","15:00","16:00","17:00","18:00","19:00","20:00"
+    };
+
+    private string GetEstadoClass(string estado) => estado.ToLower() switch
+    {
+        "confirmada" => "event-green",
+        "cancelada" => "event-red",
+        "pendiente" => "event-yellow",
+        "completada" => "event-blue",
+        _ => "event-default"
+    };
+}

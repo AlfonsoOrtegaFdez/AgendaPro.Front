@@ -1,0 +1,62 @@
+﻿<div class="agenda-toolbar">
+    <div class="agenda-toolbar__views">
+        <button class="agenda-btn agenda-btn--ghost">Vista diaria</button>
+        <button class="agenda-btn agenda-btn--primary">Vista semanal</button>
+        <button class="agenda-btn agenda-btn--primary" @onclick="OnNuevaCita">
+            + Nueva cita
+        </button>
+    </div>
+
+    <div class="agenda-toolbar__filters">
+        <select class="agenda-select" value="@ProfesionalIdSeleccionado" @onchange="ProfesionalChanged">
+            <option value="">Filtrar por profesional</option>
+            @foreach (var profesional in Profesionales)
+            {
+                <option value="@profesional.Id">@profesional.Nombre</option>
+            }
+        </select>
+
+        <button class="agenda-btn agenda-btn--ghost" @onclick="IrHoy">Hoy</button>
+
+        <input class="agenda-search"
+               placeholder="Buscar paciente"
+               value="@BusquedaPaciente"
+               @oninput="BusquedaChanged" />
+    </div>
+</div>
+
+@code {
+    [Parameter] public List<ProfesionalDto> Profesionales { get; set; } = new();
+    [Parameter] public int? ProfesionalIdSeleccionado { get; set; }
+    [Parameter] public string BusquedaPaciente { get; set; } = string.Empty;
+
+    [Parameter] public EventCallback<int?> ProfesionalIdSeleccionadoChanged { get; set; }
+    [Parameter] public EventCallback<string> BusquedaPacienteChanged { get; set; }
+    [Parameter] public EventCallback OnHoy { get; set; }
+    [Parameter] public EventCallback OnNuevaCitaClick { get; set; }
+
+    private async Task ProfesionalChanged(ChangeEventArgs e)
+    {
+        int? value = null;
+
+        if (int.TryParse(e.Value?.ToString(), out var id))
+            value = id;
+
+        await ProfesionalIdSeleccionadoChanged.InvokeAsync(value);
+    }
+
+    private async Task BusquedaChanged(ChangeEventArgs e)
+    {
+        await BusquedaPacienteChanged.InvokeAsync(e.Value?.ToString() ?? string.Empty);
+    }
+
+    private async Task IrHoy()
+    {
+        await OnHoy.InvokeAsync();
+    }
+
+    private async Task OnNuevaCita()
+    {
+        await OnNuevaCitaClick.InvokeAsync();
+    }
+}

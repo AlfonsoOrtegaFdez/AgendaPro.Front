@@ -1,0 +1,111 @@
+is_global = true
+build_property.EnableAotAnalyzer = 
+build_property.EnableSingleFileAnalyzer = 
+build_property.EnableTrimAnalyzer = false
+build_property.IncludeAllContentForSelfExtract = 
+build_property.TargetFramework = net8.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = browser
+build_property.RootNamespace = AgendaFisio.Front
+build_property.RootNamespace = AgendaFisio.Front
+build_property.ProjectDir = C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = false
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Componentes/AgendaToolbar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50ZXNcQWdlbmRhVG9vbGJhci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Componentes/Agenda/AgendaDayView.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50ZXNcQWdlbmRhXEFnZW5kYURheVZpZXcucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Counter.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Weather.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2VhdGhlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Componentes/AgendaAppointmentBlock.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50ZXNcQWdlbmRhQXBwb2ludG1lbnRCbG9jay5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-yp2nfe5qav
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Componentes/Agenda/AgendaWeekView.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50ZXNcQWdlbmRhXEFnZW5kYVdlZWtWaWV3LnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-bqaimekt7r
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Componentes/Dashboard/DashboardAgendaDiaria.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50ZXNcRGFzaGJvYXJkXERhc2hib2FyZEFnZW5kYURpYXJpYS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-v1rjxi6zr2
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Componentes/Dashboard/DashboardAgendaSemanal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50ZXNcRGFzaGJvYXJkXERhc2hib2FyZEFnZW5kYVNlbWFuYWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-0fo85wfxij
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Layout/EmptyLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XEVtcHR5TGF5b3V0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-efv8h7p7n5
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-f1940na2xz
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Layout/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-ccd554301g
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Auth/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aFxMb2dpbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-y7lgp5r2xr
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Auth/RegistroClinica.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aFxSZWdpc3Ryb0NsaW5pY2EucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-4hutn83cbu
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Auth/RegistroEmpleado.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aFxSZWdpc3Ryb0VtcGxlYWRvLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-s5mxplq5gx
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/DashboardProfesional.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGFzaGJvYXJkUHJvZmVzaW9uYWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-5jw73efalo
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/DashboardRecepcion.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGFzaGJvYXJkUmVjZXBjaW9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-lbikwoartq
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-u1hj886qcr
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Pacientes.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFjaWVudGVzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-5n3opg1hp0
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Registro.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0cm8ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-grpzj0472u

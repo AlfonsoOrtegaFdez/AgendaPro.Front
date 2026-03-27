@@ -1,0 +1,91 @@
+﻿@page "/login"
+@inject AuthService AuthService
+@inject NavigationManager Nav
+@layout EmptyLayout
+
+<PageTitle>Iniciar sesión | AgendaFisio</PageTitle>
+
+<div class="login-wrapper">
+    <div class="login-box">
+        <div class="login-left">
+            <span class="login-badge">AgendaFisio</span>
+            <h1>Bienvenido de nuevo</h1>
+            <p>
+                Accede a tu clínica y continúa gestionando tus pacientes, fisioterapeutas y citas.
+            </p>
+
+            <ul class="login-points">
+                <li>Agenda organizada</li>
+                <li>Acceso seguro por clínica</li>
+                <li>Gestión rápida y profesional</li>
+            </ul>
+        </div>
+
+        <div class="login-right">
+            <h2>Iniciar sesión</h2>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input @bind="email" type="email" placeholder="tuemail@clinica.com" />
+            </div>
+
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input @bind="password" type="password" placeholder="••••••••" />
+            </div>
+
+            <button class="btn btn-primary w-full" @onclick="HandleLogin">
+                Entrar
+            </button>
+
+            @if (!string.IsNullOrWhiteSpace(error))
+            {
+                <div class="error-box">@error</div>
+            }
+
+            <p class="login-footer">
+                ¿Aún no tienes cuenta?
+                <a href="/registro">Regístrate</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string email = "";
+    private string password = "";
+    private string error = "";
+
+    private async Task HandleLogin()
+    {
+        try
+        {
+            error = "";
+
+            var response = await AuthService.Login(email, password);
+
+            if (response is null)
+            {
+                error = "Credenciales incorrectas.";
+                return;
+            }
+
+            if (response.Rol == "Recepcionista")
+            {
+                Nav.NavigateTo("/dashboard/recepcion");
+            }
+            else if (response.Rol == "Profesional")
+            {
+                Nav.NavigateTo("/dashboard/profesional");
+            }
+            else
+            {
+                error = "El rol del usuario no es válido.";
+            }
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+    }
+}

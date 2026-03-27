@@ -1,0 +1,29 @@
+﻿<div class="agenda-appointment @GetEstadoClass()"
+     style="@Style"
+     title="@($"{Cita.PacienteNombre} - {Cita.ServicioNombre}")">
+    <div class="agenda-appointment__title">@Cita.PacienteNombre</div>
+    <div class="agenda-appointment__subtitle">@Cita.ServicioNombre</div>
+
+    @if (!string.IsNullOrWhiteSpace(Cita.Telefono))
+    {
+        <div class="agenda-appointment__meta">@Cita.Telefono</div>
+    }
+
+    <div class="agenda-appointment__time">
+        @Cita.FechaHoraInicio.ToString("HH:mm") - @Cita.FechaHoraFin.ToString("HH:mm")
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public AgendaCitaDto Cita { get; set; } = default!;
+    [Parameter, EditorRequired] public string Style { get; set; } = string.Empty;
+
+    private string GetEstadoClass() => Cita.Estado.ToLower() switch
+    {
+        "confirmada" => "agenda-appointment--confirmada",
+        "cancelada" => "agenda-appointment--cancelada",
+        "pendiente" => "agenda-appointment--pendiente",
+        "completada" => "agenda-appointment--completada",
+        _ => "agenda-appointment--default"
+    };
+}

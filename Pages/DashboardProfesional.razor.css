@@ -1,0 +1,181 @@
+.recepcion-page {
+    padding: 20px;
+    background: #f7f8fb;
+    min-height: 100vh;
+}
+
+.recepcion-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    background: white;
+    padding: 14px 16px;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.recepcion-toolbar__left,
+.recepcion-toolbar__right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.toolbar-btn {
+    border: 1px solid #dcdfe6;
+    background: white;
+    color: #2c3e50;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.toolbar-btn--active {
+    background: #eef4ff;
+    border-color: #5b8def;
+    color: #2f6fe4;
+    font-weight: 600;
+}
+
+.toolbar-btn--primary {
+    background: #2f6fe4;
+    color: white;
+    border-color: #2f6fe4;
+    font-weight: 600;
+}
+
+.toolbar-search__input {
+    border: 1px solid #dcdfe6;
+    padding: 10px 12px;
+    border-radius: 10px;
+    min-width: 220px;
+    outline: none;
+}
+
+.recepcion-date-header {
+    margin-bottom: 16px;
+}
+
+    .recepcion-date-header h2 {
+        margin: 0;
+        font-size: 24px;
+        color: #1f2937;
+        text-transform: capitalize;
+    }
+
+.recepcion-agenda-wrapper {
+    background: white;
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+/* ── Mensaje ── */
+
+.agenda-mensaje {
+    padding: 10px 16px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.agenda-mensaje--error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border-color: #fecaca;
+}
+
+/* ── Formulario cita ── */
+
+.cita-form-card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+    .cita-form-card h3 {
+        margin: 0 0 12px;
+        font-size: 18px;
+        color: #1f2937;
+    }
+
+.cita-tipo-toggle {
+    display: flex;
+    gap: 0;
+    margin-bottom: 16px;
+    border: 1px solid #d4d7de;
+    border-radius: 10px;
+    overflow: hidden;
+    width: fit-content;
+}
+
+.toggle-btn {
+    padding: 8px 18px;
+    border: none;
+    background: #f3f4f6;
+    color: #6b7280;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.toggle-btn--active {
+    background: #2f6fe4;
+    color: white;
+    font-weight: 600;
+}
+
+.cita-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+    .form-group label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        border: 1px solid #d4d7de;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 14px;
+        outline: none;
+        color: #1f2937;
+        background: #fafafa;
+    }
+
+    .form-group textarea {
+        resize: vertical;
+    }
+
+.form-group--full {
+    grid-column: 1 / -1;
+}
+
+.cita-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+}

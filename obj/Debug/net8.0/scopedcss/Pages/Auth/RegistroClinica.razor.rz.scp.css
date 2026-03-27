@@ -1,0 +1,210 @@
+.registro-clinica-wrapper[b-4hutn83cbu] {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: radial-gradient(circle at top left, rgba(14, 165, 233, 0.16), transparent 30%), radial-gradient(circle at bottom right, rgba(20, 184, 166, 0.16), transparent 30%), linear-gradient(180deg, #f8fbff 0%, #eef7f8 100%);
+}
+
+.registro-clinica-box[b-4hutn83cbu] {
+    width: 100%;
+    max-width: 1180px;
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    background: rgba(255,255,255,0.94);
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.10);
+    border: 1px solid rgba(255,255,255,0.8);
+}
+
+.registro-left[b-4hutn83cbu] {
+    padding: 3rem;
+    background: linear-gradient(135deg, #0ea5e9, #14b8a6);
+    color: white;
+}
+
+.registro-badge[b-4hutn83cbu] {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 0.5rem 0.9rem;
+    border-radius: 999px;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.registro-left h1[b-4hutn83cbu] {
+    margin-top: 0;
+    font-size: 2.4rem;
+    line-height: 1.1;
+}
+
+.registro-left p[b-4hutn83cbu] {
+    line-height: 1.7;
+    color: rgba(255,255,255,0.92);
+}
+
+.registro-points[b-4hutn83cbu] {
+    margin: 1.5rem 0 0;
+    padding-left: 1.2rem;
+}
+
+    .registro-points li[b-4hutn83cbu] {
+        margin-bottom: 0.75rem;
+    }
+
+.registro-right[b-4hutn83cbu] {
+    padding: 3rem;
+}
+
+    .registro-right h2[b-4hutn83cbu] {
+        margin-top: 0;
+        color: #0f172a;
+        margin-bottom: 1.5rem;
+    }
+
+.form-grid[b-4hutn83cbu] {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.form-group[b-4hutn83cbu] {
+    display: flex;
+    flex-direction: column;
+}
+
+    .form-group.full[b-4hutn83cbu] {
+        grid-column: 1 / -1;
+    }
+
+    .form-group label[b-4hutn83cbu] {
+        margin-bottom: 0.45rem;
+        font-weight: 600;
+        color: #334155;
+    }
+
+    .form-group input[b-4hutn83cbu] {
+        border: 1px solid #dbeafe;
+        border-radius: 16px;
+        padding: 0.95rem 1rem;
+        font-size: 1rem;
+        outline: none;
+        background: #fff;
+    }
+
+        .form-group input:focus[b-4hutn83cbu] {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
+        }
+
+.btn[b-4hutn83cbu] {
+    border: 0;
+    border-radius: 16px;
+    padding: 0.95rem 1.35rem;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+
+    .btn:hover[b-4hutn83cbu] {
+        transform: translateY(-1px);
+    }
+
+.btn-primary[b-4hutn83cbu] {
+    background: linear-gradient(135deg, #0ea5e9, #14b8a6);
+    color: white;
+    box-shadow: 0 10px 30px rgba(20, 184, 166, 0.20);
+}
+
+.btn-secondary[b-4hutn83cbu] {
+    background: white;
+    color: #0f172a;
+    border: 1px solid #dbeafe;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.w-full[b-4hutn83cbu] {
+    width: 100%;
+    margin-top: 1.25rem;
+}
+
+.error-box[b-4hutn83cbu] {
+    margin-top: 1rem;
+    background: #fef2f2;
+    color: #b91c1c;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    border: 1px solid #fecaca;
+}
+
+.form-footer[b-4hutn83cbu] {
+    margin-top: 1rem;
+    color: #64748b;
+}
+
+    .form-footer a[b-4hutn83cbu] {
+        color: #0284c7;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+.success-state[b-4hutn83cbu] {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    min-height: 100%;
+}
+
+.success-icon[b-4hutn83cbu] {
+    font-size: 3rem;
+}
+
+.codigo-box[b-4hutn83cbu] {
+    background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+    border: 1px solid #dbeafe;
+    border-radius: 20px;
+    padding: 1.25rem;
+}
+
+    .codigo-box span[b-4hutn83cbu] {
+        display: block;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+    }
+
+    .codigo-box strong[b-4hutn83cbu] {
+        font-size: 1.6rem;
+        color: #0f172a;
+        letter-spacing: 0.04em;
+    }
+
+.success-help[b-4hutn83cbu] {
+    color: #64748b;
+}
+
+.success-actions[b-4hutn83cbu] {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 950px) {
+    .registro-clinica-box[b-4hutn83cbu] {
+        grid-template-columns: 1fr;
+    }
+
+    .registro-left[b-4hutn83cbu],
+    .registro-right[b-4hutn83cbu] {
+        padding: 2rem;
+    }
+
+    .form-grid[b-4hutn83cbu] {
+        grid-template-columns: 1fr;
+    }
+}

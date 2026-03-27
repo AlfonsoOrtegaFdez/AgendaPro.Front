@@ -1,0 +1,172 @@
+﻿/* ── Container ── */
+.pro-scheduler {
+    background: #fff;
+    border: 1px solid #e2e5ea;
+    border-radius: 14px;
+    overflow-x: auto;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.pro-scheduler__grid {
+    display: grid;
+    min-width: 700px;
+}
+
+/* ── Header row ── */
+.pro-scheduler__corner {
+    height: 72px;
+    background: #fff;
+    border-right: 1px solid #e8eaee;
+    border-bottom: 1px solid #e8eaee;
+}
+
+.pro-scheduler__header {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-right: 1px solid #e8eaee;
+    border-bottom: 1px solid #e8eaee;
+}
+
+.pro-scheduler__avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #c4b5a0 0%, #a89279 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    border: 2px solid #fff;
+}
+
+.pro-scheduler__avatar span {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* ── Hours column ── */
+.pro-scheduler__hours {
+    display: grid;
+    background: #fff;
+    border-right: 1px solid #e8eaee;
+}
+
+.pro-scheduler__hour {
+    padding: 0 12px;
+    font-weight: 500;
+    color: #9ca3af;
+    font-size: .82rem;
+    border-bottom: 1px solid #e8eaee;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 6px;
+}
+
+/* ── Professional columns ── */
+.pro-scheduler__column {
+    position: relative;
+    border-right: 1px solid #e8eaee;
+    background: #fff;
+}
+
+.pro-scheduler__column-lines {
+    position: absolute;
+    inset: 0;
+    display: grid;
+}
+
+.pro-scheduler__slot {
+    border-bottom: 1px solid #f3f4f6;
+    box-sizing: border-box;
+}
+
+.pro-scheduler__slot:nth-child(even) {
+    border-bottom: 1px solid #e8eaee;
+}
+
+/* ── Appointment blocks ── */
+.pro-appointment {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    border-radius: 8px;
+    padding: 8px 10px;
+    overflow-y: auto;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    cursor: pointer;
+    border: none;
+    transition: box-shadow .15s;
+}
+
+.pro-appointment:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.pro-appointment__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+}
+
+.pro-appointment__time {
+    font-size: .7rem;
+    font-weight: 700;
+}
+
+.pro-appointment__icon {
+    font-size: .7rem;
+    flex-shrink: 0;
+}
+
+.pro-appointment__patient {
+    font-size: .82rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.pro-appointment__phone {
+    font-size: .72rem;
+    line-height: 1.15;
+    opacity: .85;
+}
+
+/* ── Estado colors ── */
+.pro-appointment--confirmada {
+    background: #3b82f6;
+    color: #fff;
+}
+
+.pro-appointment--cancelada {
+    background: #ef4444;
+    color: #fff;
+}
+
+.pro-appointment--pendiente {
+    background: #fbbf24;
+    color: #78350f;
+}
+
+.pro-appointment--completada {
+    background: #93c5fd;
+    color: #1e3a5f;
+}
+
+.pro-appointment--default {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+@media (max-width: 900px) {
+    .pro-scheduler {
+        border-radius: 10px;
+    }
+}

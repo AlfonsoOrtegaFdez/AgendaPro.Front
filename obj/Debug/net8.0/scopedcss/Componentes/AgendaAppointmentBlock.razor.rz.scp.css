@@ -1,0 +1,56 @@
+.agenda-appointment[b-yp2nfe5qav] {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    border-radius: 10px;
+    padding: .45rem .55rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    overflow: hidden;
+    border-left: 4px solid transparent;
+    z-index: 2;
+}
+
+.agenda-appointment__title[b-yp2nfe5qav] {
+    font-size: .95rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: .18rem;
+}
+
+.agenda-appointment__subtitle[b-yp2nfe5qav],
+.agenda-appointment__meta[b-yp2nfe5qav],
+.agenda-appointment__time[b-yp2nfe5qav] {
+    font-size: .78rem;
+    line-height: 1.15;
+    margin-top: .15rem;
+}
+
+.agenda-appointment--confirmada[b-yp2nfe5qav] {
+    background: #6bc56f;
+    color: white;
+    border-left-color: #379a3c;
+}
+
+.agenda-appointment--cancelada[b-yp2nfe5qav] {
+    background: #e57373;
+    color: white;
+    border-left-color: #c62828;
+}
+
+.agenda-appointment--pendiente[b-yp2nfe5qav] {
+    background: #f3cf58;
+    color: #5f4500;
+    border-left-color: #d0aa1a;
+}
+
+.agenda-appointment--completada[b-yp2nfe5qav] {
+    background: #4d97df;
+    color: white;
+    border-left-color: #2b6fb1;
+}
+
+.agenda-appointment--default[b-yp2nfe5qav] {
+    background: #d8dde6;
+    color: #344054;
+    border-left-color: #98a2b3;
+}

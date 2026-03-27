@@ -1,0 +1,102 @@
+﻿@using AgendaFisio.Front.Models
+
+<div class="pro-scheduler">
+    <div class="pro-scheduler__grid" style="@GridColumns">
+        <div class="pro-scheduler__corner"></div>
+
+        @foreach (var p in Profesionales)
+        {
+            <div class="pro-scheduler__header">
+                <div class="pro-scheduler__avatar">
+                    <span>@p.Nombre[0]</span>
+                </div>
+            </div>
+        }
+
+        <div class="pro-scheduler__hours" style="grid-template-rows: repeat(@TotalHours, @(AltoHoraPx)px);">
+            @foreach (var hour in Hours)
+            {
+                <div class="pro-scheduler__hour">@($"{hour:00}:00")</div>
+            }
+        </div>
+
+        @foreach (var p in Profesionales)
+        {
+            <div class="pro-scheduler__column" style="height: @(ColumnHeight)px;">
+                <div class="pro-scheduler__column-lines" style="grid-template-rows: repeat(@(TotalHours * 2), 1fr);">
+                    @foreach (var slot in HalfHourSlots)
+                    {
+                        <div class="pro-scheduler__slot"></div>
+                    }
+                </div>
+
+                @foreach (var cita in GetCitasProfesional(p.Id))
+                {
+                    <div class="pro-appointment @GetEstadoClass(cita.Estado)"
+                         style="@GetAppointmentStyle(cita)">
+                        <div class="pro-appointment__row">
+                            <span class="pro-appointment__time">
+                                @cita.FechaHoraInicio.ToString("H:mm") a @cita.FechaHoraFin.ToString("H:mm")
+                            </span>
+                            <span class="pro-appointment__icon">📋</span>
+                        </div>
+                        <div class="pro-appointment__patient">@cita.PacienteNombre</div>
+                        @if (!string.IsNullOrWhiteSpace(cita.Telefono))
+                        {
+                            <div class="pro-appointment__phone">@cita.Telefono</div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public List<DashboardProfesionalDto> Profesionales { get; set; } = new();
+    [Parameter] public List<DashboardCitaDto> Citas { get; set; } = new();
+
+    [Parameter] public int HoraInicio { get; set; } = 8;
+    [Parameter] public int HoraFin { get; set; } = 20;
+    [Parameter] public int AltoHoraPx { get; set; } = 80;
+
+    private IEnumerable<int> Hours => Enumerable.Range(HoraInicio, HoraFin - HoraInicio + 1);
+
+    private int TotalHours => HoraFin - HoraInicio + 1;
+    private int ColumnHeight => TotalHours * AltoHoraPx;
+
+    private IEnumerable<int> HalfHourSlots => Enumerable.Range(0, TotalHours * 2);
+
+    private string GridColumns =>
+        $"grid-template-columns: 70px repeat({Profesionales.Count}, minmax(200px, 1fr));";
+
+    private IEnumerable<DashboardCitaDto> GetCitasProfesional(int profesionalId)
+        => Citas
+            .Where(c => c.ProfesionalId == profesionalId)
+            .OrderBy(c => c.FechaHoraInicio);
+
+    private string GetAppointmentStyle(DashboardCitaDto cita)
+    {
+        var visibleStartMinutes = HoraInicio * 60;
+        var citaStartMinutes = cita.FechaHoraInicio.Hour * 60 + cita.FechaHoraInicio.Minute;
+        var citaEndMinutes = cita.FechaHoraFin.Hour * 60 + cita.FechaHoraFin.Minute;
+
+        var topMinutes = citaStartMinutes - visibleStartMinutes;
+        var durationMinutes = citaEndMinutes - citaStartMinutes;
+
+        var pxPerMinute = AltoHoraPx / 60.0;
+        var top = topMinutes * pxPerMinute;
+        var height = Math.Max(durationMinutes * pxPerMinute, 40);
+
+        return $"top:{top:F0}px; height:{height:F0}px;";
+    }
+
+    private string GetEstadoClass(string? estado) => estado?.ToLower() switch
+    {
+        "confirmada" => "pro-appointment--confirmada",
+        "cancelada" => "pro-appointment--cancelada",
+        "pendiente" => "pro-appointment--pendiente",
+        "completada" => "pro-appointment--completada",
+        _ => "pro-appointment--default"
+    };
+}
