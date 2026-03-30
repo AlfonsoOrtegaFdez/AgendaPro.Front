@@ -5,6 +5,7 @@ public class DashboardCitaDto
     public long Id { get; set; }
 
     public long? ProfesionalId { get; set; }
+    public long? PacienteId { get; set; }
 
     public DateTime FechaHoraInicioUtc { get; set; }
     public DateTime FechaHoraFinUtc { get; set; }

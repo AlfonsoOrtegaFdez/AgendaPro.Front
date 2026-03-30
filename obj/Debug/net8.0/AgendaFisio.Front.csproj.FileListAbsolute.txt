@@ -1044,10 +1044,12 @@ C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.
 C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\scopedcss\Componentes\Dashboard\DashboardAgendaDiaria.razor.rz.scp.css
 C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\scopedcss\Componentes\Agenda\AgendaWeekView.razor.rz.scp.css
 C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\scopedcss\Pages\DashboardRecepcion.razor.rz.scp.css
-C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\scopedcss\Pages\Pacientes.razor.rz.scp.css
 C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\scopedcss\Pages\Auth\RegistroEmpleado.razor.rz.scp.css
 C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\scopedcss\Componentes\Dashboard\DashboardAgendaSemanal.razor.rz.scp.css
 C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\scopedcss\Pages\DashboardProfesional.razor.rz.scp.css
-C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\compressed\u4jt16ukbw-{0}-87328r9g9x-87328r9g9x.gz
-C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\compressed\uw9y0oakrq-{0}-7axgzgva6t-7axgzgva6t.gz
-C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\compressed\w8tga8lglt-{0}-64gcwmw4pa-64gcwmw4pa.gz
+C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\AgendaFisio.Front.sourcelink.json
+C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\scopedcss\Pages\Paciente\PacienteDetalle.razor.rz.scp.css
+C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\scopedcss\Pages\Paciente\Pacientes.razor.rz.scp.css
+C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\compressed\u4jt16ukbw-{0}-eeb1scjfmy-eeb1scjfmy.gz
+C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\compressed\uw9y0oakrq-{0}-umlhbag3ng-umlhbag3ng.gz
+C:\Users\tathor\source\repos\AgendaFisio.Front\AgendaFisio.Front\obj\Debug\net8.0\compressed\w8tga8lglt-{0}-qyf8zmvqsf-qyf8zmvqsf.gz

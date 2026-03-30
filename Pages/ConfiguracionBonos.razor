@@ -1,0 +1,266 @@
+@page "/configuracion/bonos"
+@layout MainLayout
+@inject BonosApiService BonosApi
+
+<PageTitle>Bonos | Configuración | AgendaFisio</PageTitle>
+
+<div class="page-container">
+    <div class="page-header">
+        <h1>Gestión de Bonos</h1>
+        <p class="page-subtitle">Crea y administra los bonos de sesiones que ofreces en tu clínica.</p>
+    </div>
+
+    <div class="page-toolbar">
+        <button class="btn-primary" @onclick="AbrirFormulario">+ Nuevo Bono</button>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(_mensaje))
+    {
+        <div class="page-mensaje @(_esError ? "page-mensaje--error" : "")">@_mensaje</div>
+    }
+
+    @if (_mostrarFormulario)
+    {
+        <div class="page-card" style="margin-bottom:20px;">
+            <h3>@(_editando is not null ? "Editar Bono" : "Nuevo Bono")</h3>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nombre del bono</label>
+                    <input @bind="_formNombre" placeholder="Ej: Bono 10 sesiones" />
+                </div>
+
+                <div class="form-group">
+                    <label>Número de sesiones</label>
+                    <input type="number" min="1" @bind="_formSesiones" />
+                </div>
+
+                <div class="form-group">
+                    <label>Precio por sesión (€)</label>
+                    <input type="number" step="0.01" min="0" @bind="_formPrecioSesion" />
+                </div>
+
+                <div class="form-group">
+                    <label>Precio total</label>
+                    <input type="text" readonly value="@((_formSesiones * _formPrecioSesion).ToString("N2")) €" class="form-readonly" />
+                </div>
+
+                <div class="form-group form-group--full">
+                    <label>Descripción (opcional)</label>
+                    <textarea @bind="_formDescripcion" rows="2" placeholder="Descripción del bono..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-secondary" @onclick="CerrarFormulario">Cancelar</button>
+                <button class="btn-primary" @onclick="GuardarBono" disabled="@_guardando">
+                    @(_guardando ? "Guardando..." : "Guardar")
+                </button>
+            </div>
+        </div>
+    }
+
+    @if (_cargando)
+    {
+        <div class="page-card"><p style="text-align:center;color:#9ca3af;padding:24px;">Cargando bonos...</p></div>
+    }
+    else
+    {
+        <div class="page-card">
+            <h3>Catálogo de bonos</h3>
+            <table class="page-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Sesiones</th>
+                        <th>Precio / sesión</th>
+                        <th>Precio total</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (_bonos.Count == 0)
+                    {
+                        <tr><td colspan="6" class="page-empty-cell">No hay bonos creados. Crea el primero.</td></tr>
+                    }
+                    @foreach (var b in _bonos)
+                    {
+                        <tr>
+                            <td><strong>@b.Nombre</strong></td>
+                            <td>@b.TotalSesiones</td>
+                            <td>@(b.TotalSesiones > 0 ? (b.Precio / b.TotalSesiones).ToString("N2") : "0") €</td>
+                            <td>@b.Precio.ToString("N2") €</td>
+                            <td>
+                                <span class="badge-estado @(b.Activo ? "badge-estado--completada" : "badge-estado--cancelada")">
+                                    @(b.Activo ? "Activo" : "Inactivo")
+                                </span>
+                            </td>
+                            <td style="display:flex;gap:6px;">
+                                <button class="btn-sm btn-sm--primary" @onclick="() => EditarBono(b)">Editar</button>
+                                <button class="btn-sm btn-sm--danger" @onclick="() => EliminarBono(b.Id)">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private List<BonoDto> _bonos = new();
+    private bool _cargando = true;
+    private bool _guardando;
+    private string _mensaje = string.Empty;
+    private bool _esError;
+
+    private bool _mostrarFormulario;
+    private BonoDto? _editando;
+    private string _formNombre = string.Empty;
+    private string? _formDescripcion;
+    private int _formSesiones = 10;
+    private decimal _formPrecioSesion = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarBonos();
+    }
+
+    private async Task CargarBonos()
+    {
+        _cargando = true;
+        try
+        {
+            _bonos = await BonosApi.GetAllAsync();
+            _bonos = _bonos.OrderByDescending(b => b.Activo).ThenBy(b => b.Nombre).ToList();
+        }
+        catch
+        {
+            _mensaje = "No se pudieron cargar los bonos.";
+            _esError = true;
+        }
+        finally
+        {
+            _cargando = false;
+        }
+    }
+
+    private void AbrirFormulario()
+    {
+        _editando = null;
+        _formNombre = string.Empty;
+        _formDescripcion = null;
+        _formSesiones = 10;
+        _formPrecioSesion = 0;
+        _mostrarFormulario = true;
+        _mensaje = string.Empty;
+    }
+
+    private void EditarBono(BonoDto bono)
+    {
+        _editando = bono;
+        _formNombre = bono.Nombre;
+        _formDescripcion = bono.Descripcion;
+        _formSesiones = bono.TotalSesiones;
+        _formPrecioSesion = bono.TotalSesiones > 0 ? bono.Precio / bono.TotalSesiones : 0;
+        _mostrarFormulario = true;
+        _mensaje = string.Empty;
+    }
+
+    private void CerrarFormulario()
+    {
+        _mostrarFormulario = false;
+        _editando = null;
+    }
+
+    private async Task GuardarBono()
+    {
+        if (string.IsNullOrWhiteSpace(_formNombre))
+        {
+            _mensaje = "El nombre es obligatorio.";
+            _esError = true;
+            return;
+        }
+        if (_formSesiones < 1)
+        {
+            _mensaje = "El número de sesiones debe ser al menos 1.";
+            _esError = true;
+            return;
+        }
+
+        _guardando = true;
+        _mensaje = string.Empty;
+
+        try
+        {
+            var bono = new BonoDto
+            {
+                Id = _editando?.Id ?? 0,
+                Nombre = _formNombre.Trim(),
+                Descripcion = string.IsNullOrWhiteSpace(_formDescripcion) ? null : _formDescripcion.Trim(),
+                TotalSesiones = _formSesiones,
+                Precio = _formSesiones * _formPrecioSesion,
+                Activo = _editando?.Activo ?? true
+            };
+
+            bool ok;
+            string? error;
+
+            if (_editando is not null)
+            {
+                (ok, error) = await BonosApi.ActualizarAsync(bono);
+            }
+            else
+            {
+                (ok, error) = await BonosApi.CrearAsync(bono);
+            }
+
+            if (ok)
+            {
+                _mensaje = _editando is not null ? "Bono actualizado." : "Bono creado correctamente.";
+                _esError = false;
+                CerrarFormulario();
+                await CargarBonos();
+            }
+            else
+            {
+                _mensaje = $"No se pudo guardar: {error}";
+                _esError = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            _mensaje = $"Error de conexión: {ex.Message}";
+            _esError = true;
+        }
+        finally
+        {
+            _guardando = false;
+        }
+    }
+
+    private async Task EliminarBono(long id)
+    {
+        try
+        {
+            var ok = await BonosApi.EliminarAsync(id);
+            if (ok)
+            {
+                _mensaje = "Bono eliminado.";
+                _esError = false;
+                await CargarBonos();
+            }
+            else
+            {
+                _mensaje = "No se pudo eliminar el bono.";
+                _esError = true;
+            }
+        }
+        catch
+        {
+            _mensaje = "Error de conexión al eliminar.";
+            _esError = true;
+        }
+    }
+}

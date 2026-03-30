@@ -36,6 +36,9 @@ public class AuthService
         await _tokenService.SetToken(data.Token);
         await _sessionService.SetSession(data.Rol, $"{data.Nombre} {data.Apellidos}", data.NombreClinica);
 
+        if (data.ProfesionalId.HasValue)
+            await _sessionService.SetProfesionalId(data.ProfesionalId.Value);
+
         return data;
     }
 

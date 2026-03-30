@@ -281,8 +281,26 @@
     line-height: 1.6;
 }
 
-.access-card.btn[b-u1hj886qcr] {
+.access-card .btn[b-u1hj886qcr] {
     margin-top: 1.2rem;
+}
+
+.access-card[b-u1hj886qcr] {
+    transition: transform .2s, box-shadow .2s;
+}
+
+.access-card:hover[b-u1hj886qcr] {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.10);
+}
+
+.benefit-card[b-u1hj886qcr] {
+    transition: transform .2s, box-shadow .2s;
+}
+
+.benefit-card:hover[b-u1hj886qcr] {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.10);
 }
 
 @media(max-width: 1000px) {

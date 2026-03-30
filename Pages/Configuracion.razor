@@ -1,0 +1,64 @@
+@page "/configuracion"
+@layout MainLayout
+
+<PageTitle>Configuración | AgendaFisio</PageTitle>
+
+<div class="page-container">
+    <div class="page-header">
+        <h1>Configuración</h1>
+        <p class="page-subtitle">Gestiona los ajustes de tu clínica, profesionales, servicios y más.</p>
+    </div>
+
+    <div class="config-grid">
+        <a href="/configuracion/profesionales" class="config-card">
+            <div class="config-card__icon">👨‍⚕️</div>
+            <div class="config-card__title">Profesionales</div>
+            <div class="config-card__desc">Gestiona los profesionales de tu clínica.</div>
+        </a>
+
+        <a href="/configuracion/servicios" class="config-card">
+            <div class="config-card__icon">💆</div>
+            <div class="config-card__title">Servicios</div>
+            <div class="config-card__desc">Configura los tratamientos y servicios que ofreces.</div>
+        </a>
+
+        <a href="/configuracion/bonos" class="config-card">
+            <div class="config-card__icon">🎟️</div>
+            <div class="config-card__title">Bonos</div>
+            <div class="config-card__desc">Crea y gestiona bonos de sesiones para tus pacientes.</div>
+        </a>
+
+        <a href="/configuracion/campos-personalizados" class="config-card">
+            <div class="config-card__icon">📝</div>
+            <div class="config-card__title">Campos personalizados</div>
+            <div class="config-card__desc">Añade campos extra a las fichas de pacientes.</div>
+        </a>
+
+        <a href="/configuracion/factores-riesgo" class="config-card">
+            <div class="config-card__icon">⚠️</div>
+            <div class="config-card__title">Factores de riesgo</div>
+            <div class="config-card__desc">Define factores de riesgo para alertar en citas.</div>
+        </a>
+
+        <a href="/configuracion/consentimientos" class="config-card">
+            <div class="config-card__icon">📋</div>
+            <div class="config-card__title">Consentimientos</div>
+            <div class="config-card__desc">Plantillas de consentimientos informados.</div>
+        </a>
+
+        <a href="/configuracion/horarios" class="config-card">
+            <div class="config-card__icon">🕐</div>
+            <div class="config-card__title">Horarios y Bloqueos</div>
+            <div class="config-card__desc">Configura horarios laborales y bloqueos de agenda.</div>
+        </a>
+
+        <a href="/configuracion/clinica" class="config-card">
+            <div class="config-card__icon">🏥</div>
+            <div class="config-card__title">Datos de la clínica</div>
+            <div class="config-card__desc">Nombre, dirección, teléfono y logotipo.</div>
+        </a>
+    </div>
+</div>
+
+@code {
+}

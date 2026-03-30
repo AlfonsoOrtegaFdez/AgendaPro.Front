@@ -32,8 +32,11 @@
 
                 @foreach (var cita in GetCitasDia(dia))
                 {
+                    var citaLocal = cita;
                     <div class="pro-appointment @GetEstadoClass(cita.Estado)"
-                         style="@GetAppointmentStyle(cita)">
+                         style="@GetAppointmentStyle(cita)"
+                         @onclick="() => AbrirPopup(citaLocal)"
+                         @onclick:stopPropagation="true">
                         <div class="pro-appointment__row">
                             <span class="pro-appointment__time">
                                 @cita.FechaHoraInicio.ToString("H:mm") - @cita.FechaHoraFin.ToString("H:mm")
@@ -47,15 +50,68 @@
     </div>
 </div>
 
+@if (_citaSeleccionada is not null)
+{
+    <div class="cita-popup-overlay" @onclick="CerrarPopup">
+        <div class="cita-popup-card" @onclick:stopPropagation="true">
+            <div class="cita-popup-header">
+                <div>
+                    <h4>@_citaSeleccionada.PacienteNombre</h4>
+                    <span class="cita-popup-time">
+                        @_citaSeleccionada.FechaHoraInicio.ToString("H:mm") – @_citaSeleccionada.FechaHoraFin.ToString("H:mm")
+                    </span>
+                </div>
+                <button class="cita-popup-close" @onclick="CerrarPopup">✕</button>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(_citaSeleccionada.Telefono))
+            {
+                <p class="cita-popup-info">📞 @_citaSeleccionada.Telefono</p>
+            }
+            @if (!string.IsNullOrWhiteSpace(_citaSeleccionada.Observaciones))
+            {
+                <p class="cita-popup-info">📝 @_citaSeleccionada.Observaciones</p>
+            }
+
+            <p class="cita-popup-label">Cambiar estado:</p>
+            <div class="cita-popup-options">
+                <button class="cita-estado-btn cita-estado-btn--pendiente @EsActivo("Pendiente")"
+                        @onclick='() => SeleccionarEstado("Pendiente")'>
+                    <span class="cita-estado-dot"></span> Pendiente
+                </button>
+                <button class="cita-estado-btn cita-estado-btn--confirmada @EsActivo("Confirmada")"
+                        @onclick='() => SeleccionarEstado("Confirmada")'>
+                    <span class="cita-estado-dot"></span> Confirmada
+                </button>
+                <button class="cita-estado-btn cita-estado-btn--completada @EsActivo("Completada")"
+                        @onclick='() => SeleccionarEstado("Completada")'>
+                    <span class="cita-estado-dot"></span> Completada
+                </button>
+                <button class="cita-estado-btn cita-estado-btn--noasistio @EsActivo("NoAsistio")"
+                        @onclick='() => SeleccionarEstado("NoAsistio")'>
+                    <span class="cita-estado-dot"></span> No Asistió
+                </button>
+                <button class="cita-estado-btn cita-estado-btn--cancelada @EsActivo("Cancelada")"
+                        @onclick='() => SeleccionarEstado("Cancelada")'>
+                    <span class="cita-estado-dot"></span> Cancelada
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     private readonly System.Globalization.CultureInfo _culture = new("es-ES");
 
     [Parameter] public DateTime FechaInicioSemana { get; set; }
     [Parameter] public List<DashboardCitaDto> Citas { get; set; } = new();
+    [Parameter] public EventCallback<(long CitaId, string NuevoEstado)> OnEstadoCambiado { get; set; }
 
     [Parameter] public int HoraInicio { get; set; } = 8;
     [Parameter] public int HoraFin { get; set; } = 20;
     [Parameter] public int AltoHoraPx { get; set; } = 72;
+
+    private DashboardCitaDto? _citaSeleccionada;
 
     private IEnumerable<DateTime> DiasSemana =>
         Enumerable.Range(0, 7).Select(i => FechaInicioSemana.Date.AddDays(i));
@@ -97,6 +153,24 @@
         "cancelada" => "pro-appointment--cancelada",
         "pendiente" => "pro-appointment--pendiente",
         "completada" => "pro-appointment--completada",
+        "noasistio" => "pro-appointment--noasistio",
         _ => "pro-appointment--default"
     };
+
+    private void AbrirPopup(DashboardCitaDto cita) => _citaSeleccionada = cita;
+    private void CerrarPopup() => _citaSeleccionada = null;
+
+    private string EsActivo(string estado) =>
+        string.Equals(_citaSeleccionada?.Estado, estado, StringComparison.OrdinalIgnoreCase)
+            ? "cita-estado-btn--active" : "";
+
+    private async Task SeleccionarEstado(string nuevoEstado)
+    {
+        if (_citaSeleccionada is not null)
+        {
+            await OnEstadoCambiado.InvokeAsync((_citaSeleccionada.Id, nuevoEstado));
+            _citaSeleccionada.Estado = nuevoEstado;
+            _citaSeleccionada = null;
+        }
+    }
 }

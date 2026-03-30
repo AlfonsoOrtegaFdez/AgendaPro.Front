@@ -30,5 +30,18 @@ builder.Services.AddScoped<AgendaApiService>();
 builder.Services.AddScoped<ProfesionalesApiService>();
 builder.Services.AddScoped<PacientesApiService>();
 builder.Services.AddScoped<CitasApiService>();
+builder.Services.AddScoped<ConsentimientosApiService>();
+builder.Services.AddScoped<BonosApiService>();
+builder.Services.AddScoped<FactoresRiesgoApiService>();
+builder.Services.AddScoped<TutoresApiService>();
+builder.Services.AddScoped<CamposPersonalizadosApiService>();
+builder.Services.AddScoped<FirmaDigitalApiService>();
+builder.Services.AddScoped<CertificadosApiService>();
+builder.Services.AddScoped<InformesApiService>();
+builder.Services.AddScoped<BloqueosApiService>();
+builder.Services.AddScoped<PlanningApiService>();
+builder.Services.AddScoped<FiltrosAgendaApiService>();
+builder.Services.AddScoped<NoAsistenciasApiService>();
+builder.Services.AddScoped<EstadoCitaCacheService>();
 
 await builder.Build().RunAsync();

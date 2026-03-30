@@ -1,0 +1,224 @@
+@page "/historial"
+@layout MainLayout
+
+<PageTitle>Historial de Consulta | AgendaFisio</PageTitle>
+
+<div class="page-container">
+    <div class="page-header">
+        <h1>Historial de Consulta</h1>
+        <p class="page-subtitle">Consulta el historial clínico y las citas pasadas de tus pacientes.</p>
+    </div>
+
+    <div class="page-toolbar">
+        <input type="text"
+               class="page-search"
+               placeholder="Buscar paciente por nombre..."
+               @bind="_busqueda"
+               @bind:event="oninput" />
+    </div>
+
+    @if (_pacientesFiltrados.Any())
+    {
+        <div class="page-card">
+            <table class="page-table">
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Teléfono</th>
+                        <th>Email</th>
+                        <th>Observaciones</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in _pacientesFiltrados)
+                    {
+                        <tr>
+                            <td><strong>@p.Nombre @p.Apellidos</strong></td>
+                            <td>@(p.Telefono ?? "—")</td>
+                            <td>@(p.Email ?? "—")</td>
+                            <td>@(string.IsNullOrWhiteSpace(p.Observaciones) ? "—" : p.Observaciones)</td>
+                            <td>
+                                <button class="btn-sm btn-sm--primary"
+                                        @onclick="() => VerHistorial(p.Id)">
+                                    @(_pacienteSeleccionado?.Id == p.Id ? "Ocultar" : "Ver historial")
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else if (_cargado)
+    {
+        <div class="page-empty">No se encontraron pacientes.</div>
+    }
+
+    @if (_pacienteSeleccionado is not null)
+    {
+        <div class="page-card" style="margin-top:20px;">
+            <h3>📋 Historial de @_pacienteSeleccionado.Nombre @_pacienteSeleccionado.Apellidos</h3>
+
+            @if (_cargandoHistorial)
+            {
+                <div class="page-empty">Cargando historial...</div>
+            }
+            else if (!_historialCitas.Any())
+            {
+                <div class="page-empty">Este paciente no tiene citas registradas.</div>
+            }
+            else
+            {
+                <div class="stats-row" style="margin-bottom:16px;">
+                    <div class="stat-card">
+                        <div class="stat-card__label">Total citas</div>
+                        <div class="stat-card__value">@_historialCitas.Count</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">Completadas</div>
+                        <div class="stat-card__value">@_historialCitas.Count(c => c.Estado.Equals("Completada", StringComparison.OrdinalIgnoreCase))</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">No asistió</div>
+                        <div class="stat-card__value">@_historialCitas.Count(c => c.Estado.Equals("NoAsistio", StringComparison.OrdinalIgnoreCase))</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">Canceladas</div>
+                        <div class="stat-card__value">@_historialCitas.Count(c => c.Estado.Equals("Cancelada", StringComparison.OrdinalIgnoreCase))</div>
+                    </div>
+                </div>
+
+                <table class="page-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Motivo</th>
+                            <th>Estado</th>
+                            <th>Importe</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var c in _historialCitas)
+                        {
+                            <tr>
+                                <td>@c.FechaHoraInicio.ToString("dd/MM/yyyy")</td>
+                                <td>@c.FechaHoraInicio.ToString("HH:mm") – @c.FechaHoraFin.ToString("HH:mm")</td>
+                                <td>@(string.IsNullOrWhiteSpace(c.Motivo) ? "—" : c.Motivo)</td>
+                                <td>
+                                    <span class="badge-estado badge-estado--@GetEstadoBadge(c.Estado)">@c.Estado</span>
+                                </td>
+                                <td>@c.Precio.ToString("N2") €</td>
+                                <td>
+                                    <button class="btn-sm btn-sm--primary"
+                                            @onclick="() => ToggleDetalle(c.Id)">
+                                        @(_detalleAbierto == c.Id ? "Cerrar" : "Detalle")
+                                    </button>
+                                </td>
+                            </tr>
+                            @if (_detalleAbierto == c.Id)
+                            {
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="detail-panel">
+                                            <h4>Detalle de la cita</h4>
+                                            <div class="detail-grid">
+                                                <dt>Tipo</dt>
+                                                <dd>@(string.IsNullOrWhiteSpace(c.Tipo) ? "—" : c.Tipo)</dd>
+                                                <dt>Observaciones</dt>
+                                                <dd>@(string.IsNullOrWhiteSpace(c.Observaciones) ? "Sin observaciones" : c.Observaciones)</dd>
+                                                <dt>Pago</dt>
+                                                <dd>@(string.IsNullOrWhiteSpace(c.EstadoPago) ? "Sin registro" : c.EstadoPago)</dd>
+                                                <dt>Teléfono</dt>
+                                                <dd>@(string.IsNullOrWhiteSpace(c.Telefono) ? "—" : c.Telefono)</dd>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Inject] private PacientesApiService PacientesApi { get; set; } = default!;
+    [Inject] private CitasApiService CitasApi { get; set; } = default!;
+    [Inject] private EstadoCitaCacheService EstadoCache { get; set; } = default!;
+
+    private List<PacienteDto> _pacientes = new();
+    private string _busqueda = string.Empty;
+    private bool _cargado;
+    private PacienteDto? _pacienteSeleccionado;
+    private List<DashboardCitaDto> _historialCitas = new();
+    private bool _cargandoHistorial;
+    private long? _detalleAbierto;
+
+    private IEnumerable<PacienteDto> _pacientesFiltrados =>
+        string.IsNullOrWhiteSpace(_busqueda)
+            ? _pacientes
+            : _pacientes.Where(p =>
+                $"{p.Nombre} {p.Apellidos}".Contains(_busqueda, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        try { _pacientes = await PacientesApi.GetAllAsync(); }
+        catch { }
+        _cargado = true;
+    }
+
+    private async Task VerHistorial(long id)
+    {
+        if (_pacienteSeleccionado?.Id == id)
+        {
+            _pacienteSeleccionado = null;
+            _historialCitas.Clear();
+            _detalleAbierto = null;
+            return;
+        }
+
+        _pacienteSeleccionado = _pacientes.FirstOrDefault(p => p.Id == id);
+        _detalleAbierto = null;
+
+        if (_pacienteSeleccionado is null) return;
+
+        _cargandoHistorial = true;
+        StateHasChanged();
+
+        try
+        {
+            var desde = DateTime.SpecifyKind(new DateTime(2020, 1, 1), DateTimeKind.Local).ToUniversalTime();
+            var hasta = DateTime.SpecifyKind(DateTime.Today.AddDays(1), DateTimeKind.Local).ToUniversalTime();
+
+            var todas = await CitasApi.GetSemanaAsync(desde, hasta);
+            await EstadoCache.AplicarCacheAsync(todas);
+            _historialCitas = todas
+                .Where(c => c.PacienteNombre.Equals($"{_pacienteSeleccionado.Nombre} {_pacienteSeleccionado.Apellidos}", StringComparison.OrdinalIgnoreCase)
+                          || c.PacienteNombre.Equals(_pacienteSeleccionado.Nombre, StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(c => c.FechaHoraInicio)
+                .ToList();
+        }
+        catch { _historialCitas = new(); }
+        _cargandoHistorial = false;
+    }
+
+    private void ToggleDetalle(long id)
+    {
+        _detalleAbierto = _detalleAbierto == id ? null : id;
+    }
+
+    private static string GetEstadoBadge(string estado) => estado?.ToLowerInvariant() switch
+    {
+        "pendiente"  => "pendiente",
+        "confirmada" => "confirmada",
+        "completada" => "completada",
+        "noasistio"  => "noasistio",
+        "cancelada"  => "cancelada",
+        _            => "pendiente"
+    };
+}

@@ -68,6 +68,20 @@
         text-transform: capitalize;
     }
 
+.agenda-nav[b-5jw73efalo] {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.agenda-nav h2[b-5jw73efalo] {
+    margin: 0;
+    font-size: 22px;
+    color: #1f2937;
+    text-transform: capitalize;
+    white-space: nowrap;
+}
+
 .recepcion-agenda-wrapper[b-5jw73efalo] {
     background: white;
     border-radius: 16px;

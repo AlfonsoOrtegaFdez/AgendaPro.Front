@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "AgendaFisio.Front",
   "resources": {
-    "hash": "sha256-MfIO3htw8U+YKVF4875ylmw6fvnvzASCT1WJFoaau2Q=",
+    "hash": "sha256-lFmxIQ6luPBWX8XUvBHiR3DBxSyixkFLdtS6FCgoofo=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-4g0GzvOXSwZvTLca4PrWJkoeltz+V9IF/hEFDcnVros="
     },
@@ -209,10 +209,10 @@
       "mscorlib.wasm": "sha256-OWQk7msdg0kG9vfJqVNUrPJ8JkyUipH2afbnYJLsKjk=",
       "netstandard.wasm": "sha256-+Ya7AWY6kwjwbQw9fHax9L8Qnn+UZKQF05aZE4ZOXiY=",
       "System.Private.CoreLib.wasm": "sha256-ouVBjy2oz9hC308fAFLns0mvmtyaeUDXt3C5DAk1muc=",
-      "AgendaFisio.Front.wasm": "sha256-TJ954Ujqqt7EHtAqMY9rK0LCg9PN1Twh6Wo2U+4PcCo="
+      "AgendaFisio.Front.wasm": "sha256-9isg2LFS4ohQIvC6iHFOgOeFvORK1l/df/Xfz4gYQiM="
     },
     "pdb": {
-      "AgendaFisio.Front.pdb": "sha256-gUDtU5TqbMfZZzjxmhFIryGQ/65DeEaidehhimaO3xI="
+      "AgendaFisio.Front.pdb": "sha256-OmVsvn5PosqU7vzZHW3qq/f8Ay3717D24qkwE21u75E="
     }
   },
   "cacheBootResources": true,

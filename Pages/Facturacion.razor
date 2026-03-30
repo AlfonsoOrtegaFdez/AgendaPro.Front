@@ -1,0 +1,217 @@
+@page "/facturacion"
+@layout MainLayout
+
+<PageTitle>Facturación | AgendaFisio</PageTitle>
+
+<div class="page-container">
+    <div class="page-header">
+        <h1>Facturación</h1>
+        <p class="page-subtitle">Gestiona los cobros de tus citas, consulta ingresos y bonos activos.</p>
+    </div>
+
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-card__label">Facturado (mes actual)</div>
+            <div class="stat-card__value">@_facturadoMes.ToString("N2") €</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card__label">Pendiente de cobro</div>
+            <div class="stat-card__value">@_pendienteCobro.ToString("N2") €</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card__label">Citas completadas (mes)</div>
+            <div class="stat-card__value">@_citasCompletadas</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card__label">Bonos activos</div>
+            <div class="stat-card__value">@_bonosActivos</div>
+        </div>
+    </div>
+
+    <div class="page-tabs">
+        <button class="page-tab @(_tab == "citas" ? "page-tab--active" : "")" @onclick='() => _tab = "citas"'>Citas y cobros</button>
+        <button class="page-tab @(_tab == "bonos" ? "page-tab--active" : "")" @onclick='() => _tab = "bonos"'>Bonos</button>
+    </div>
+
+    @if (_tab == "citas")
+    {
+        <div class="filter-row">
+            <label>Desde</label>
+            <input type="date" @bind="_fechaDesde" @bind:event="onchange" />
+            <label>Hasta</label>
+            <input type="date" @bind="_fechaHasta" @bind:event="onchange" />
+            <button class="btn-primary" @onclick="CargarCitas">Filtrar</button>
+            <input type="text"
+                   class="page-search"
+                   placeholder="Buscar paciente..."
+                   @bind="_busqueda"
+                   @bind:event="oninput" />
+        </div>
+
+        <div class="page-card">
+            <h3>Citas del periodo</h3>
+            <table class="page-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Paciente</th>
+                        <th>Estado cita</th>
+                        <th>Importe</th>
+                        <th>Estado pago</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!_citasFiltradas.Any())
+                    {
+                        <tr><td colspan="6" class="page-empty-cell">No hay citas en este periodo.</td></tr>
+                    }
+                    @foreach (var c in _citasFiltradas)
+                    {
+                        <tr>
+                            <td>@c.FechaHoraInicio.ToString("dd/MM/yyyy")</td>
+                            <td>@c.FechaHoraInicio.ToString("HH:mm") – @c.FechaHoraFin.ToString("HH:mm")</td>
+                            <td><strong>@c.PacienteNombre</strong></td>
+                            <td>
+                                <span class="badge-estado badge-estado--@GetEstadoBadge(c.Estado)">@c.Estado</span>
+                            </td>
+                            <td>@c.Precio.ToString("N2") €</td>
+                            <td>
+                                <span class="badge-pago badge-pago--@GetPagoBadge(c.EstadoPago)">
+                                    @(string.IsNullOrWhiteSpace(c.EstadoPago) ? "Sin pago" : c.EstadoPago)
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @if (_tab == "bonos")
+    {
+        <div class="page-card">
+            <h3>Catálogo de bonos</h3>
+            <table class="page-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Sesiones</th>
+                        <th>Precio</th>
+                        <th>Activo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!_bonos.Any())
+                    {
+                        <tr><td colspan="5" class="page-empty-cell">No hay bonos configurados.</td></tr>
+                    }
+                    @foreach (var b in _bonos)
+                    {
+                        <tr>
+                            <td><strong>@b.Nombre</strong></td>
+                            <td>@(b.Descripcion ?? "—")</td>
+                            <td>@b.TotalSesiones</td>
+                            <td>@b.Precio.ToString("N2") €</td>
+                            <td>
+                                <span class="badge-estado @(b.Activo ? "badge-estado--completada" : "badge-estado--cancelada")">
+                                    @(b.Activo ? "Sí" : "No")
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @if (_cargando)
+    {
+        <div class="page-empty">Cargando datos...</div>
+    }
+</div>
+
+@code {
+    [Inject] private CitasApiService CitasApi { get; set; } = default!;
+    [Inject] private BonosApiService BonosApi { get; set; } = default!;
+    [Inject] private EstadoCitaCacheService EstadoCache { get; set; } = default!;
+
+    private string _tab = "citas";
+    private string _busqueda = string.Empty;
+    private bool _cargando;
+
+    private DateTime _fechaDesde = new(DateTime.Today.Year, DateTime.Today.Month, 1);
+    private DateTime _fechaHasta = DateTime.Today;
+
+    private List<DashboardCitaDto> _citas = new();
+    private List<BonoDto> _bonos = new();
+    private int _bonosActivos;
+    private decimal _facturadoMes;
+    private decimal _pendienteCobro;
+    private int _citasCompletadas;
+
+    private IEnumerable<DashboardCitaDto> _citasFiltradas =>
+        string.IsNullOrWhiteSpace(_busqueda)
+            ? _citas
+            : _citas.Where(c => c.PacienteNombre.Contains(_busqueda, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        _cargando = true;
+        try
+        {
+            await Task.WhenAll(CargarCitas(), CargarBonos());
+        }
+        catch { }
+        _cargando = false;
+    }
+
+    private async Task CargarCitas()
+    {
+        var desde = DateTime.SpecifyKind(_fechaDesde, DateTimeKind.Local).ToUniversalTime();
+        var hasta = DateTime.SpecifyKind(_fechaHasta.Date.AddDays(1).AddSeconds(-1), DateTimeKind.Local).ToUniversalTime();
+
+        _citas = await CitasApi.GetSemanaAsync(desde, hasta);
+        await EstadoCache.AplicarCacheAsync(_citas);
+        _citas = _citas.OrderByDescending(c => c.FechaHoraInicio).ToList();
+
+        RecalcularStats();
+    }
+
+    private async Task CargarBonos()
+    {
+        _bonos = await BonosApi.GetAllAsync();
+        _bonosActivos = _bonos.Count(b => b.Activo);
+    }
+
+    private void RecalcularStats()
+    {
+        var completadas = _citas.Where(c =>
+            c.Estado.Equals("Completada", StringComparison.OrdinalIgnoreCase));
+
+        _citasCompletadas = completadas.Count();
+        _facturadoMes = completadas.Sum(c => c.Precio);
+        _pendienteCobro = _citas
+            .Where(c => !c.Estado.Equals("Cancelada", StringComparison.OrdinalIgnoreCase)
+                     && (string.IsNullOrWhiteSpace(c.EstadoPago) || c.EstadoPago.Equals("Pendiente", StringComparison.OrdinalIgnoreCase)))
+            .Sum(c => c.Precio);
+    }
+
+    private static string GetEstadoBadge(string estado) => estado?.ToLowerInvariant() switch
+    {
+        "pendiente"  => "pendiente",
+        "confirmada" => "confirmada",
+        "completada" => "completada",
+        "noasistio"  => "noasistio",
+        "cancelada"  => "cancelada",
+        _            => "pendiente"
+    };
+
+    private static string GetPagoBadge(string? pago) => pago?.ToLowerInvariant() switch
+    {
+        "pagado"    => "pagado",
+        "parcial"   => "parcial",
+        _           => "pendiente"
+    };
+}

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AgendaFisio.Front")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c63cf898e9d08950616a31bbe85a48be4a1e05a0")]
 [assembly: System.Reflection.AssemblyProductAttribute("AgendaFisio.Front")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AgendaFisio.Front")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

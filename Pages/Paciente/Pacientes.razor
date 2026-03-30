@@ -1,6 +1,7 @@
 @page "/pacientes"
 @layout MainLayout
 @inject PacientesApiService PacientesApi
+@inject NavigationManager Navigation
 
 <PageTitle>Pacientes | AgendaFisio</PageTitle>
 
@@ -105,12 +106,19 @@
                         @foreach (var p in PacientesFiltrados)
                         {
                             <tr>
-                                <td class="pacientes-nombre">@p.Nombre @p.Apellidos</td>
+                                <td class="pacientes-nombre">
+                                    <button type="button" class="link-paciente" @onclick="() => VerPaciente(p.Id)">
+                                        @p.Nombre @p.Apellidos
+                                    </button>
+                                </td>
                                 <td>@(p.Telefono ?? "—")</td>
                                 <td>@(p.Email ?? "—")</td>
                                 <td>@(p.FechaNacimiento?.ToString("dd/MM/yyyy") ?? "—")</td>
                                 <td>@(p.CreatedAtUtc?.ToLocalTime().ToString("dd/MM/yyyy") ?? "—")</td>
                                 <td class="pacientes-acciones">
+                                    <button class="pacientes-btn pacientes-btn--ghost" @onclick="() => VerPaciente(p.Id)">
+                                        Ver ficha
+                                    </button>
                                     <button class="pacientes-btn pacientes-btn--ghost" @onclick="() => EditarPaciente(p)">
                                         Editar
                                     </button>
@@ -179,6 +187,11 @@
         }
     }
 
+    private void VerPaciente(long id)
+    {
+        Navigation.NavigateTo($"/pacientes/{id}");
+    }
+
     private void NuevoPaciente()
     {
         _editandoId = null;
@@ -238,7 +251,7 @@
 
             if (_editandoId is not null)
             {
-                (ok, error) = await PacientesApi.ActualizarAsync(paciente);
+                (ok, error) = await PacientesApi.ActualizarAsync(_editandoId.Value, paciente);
             }
             else
             {

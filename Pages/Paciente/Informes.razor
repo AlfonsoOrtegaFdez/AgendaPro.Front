@@ -1,0 +1,335 @@
+@page "/informes"
+@layout MainLayout
+@inject SessionService SessionService
+@inject NavigationManager Navigation
+
+<PageTitle>Informes | AgendaFisio</PageTitle>
+
+<div class="page-container">
+    <div class="page-header">
+        <h1>Informes Clínicos</h1>
+        <p class="page-subtitle">Crea, consulta y gestiona los informes de tus pacientes.</p>
+    </div>
+
+    <div class="page-toolbar">
+        <button class="btn-primary" @onclick="AbrirFormulario">+ Nuevo Informe</button>
+        <input type="text"
+               class="page-search"
+               placeholder="Buscar por paciente o título..."
+               @bind="_busqueda"
+               @bind:event="oninput" />
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(_mensaje))
+    {
+        <div class="page-mensaje @(_esError ? "page-mensaje--error" : "")">@_mensaje</div>
+    }
+
+    @if (_mostrarFormulario)
+    {
+        <div class="page-card" style="margin-bottom:20px;">
+            <h3>@(_editando is not null ? "Editar Informe" : "Nuevo Informe")</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Paciente</label>
+                    <select @bind="_nuevoInforme.PacienteId">
+                        <option value="0">Selecciona un paciente</option>
+                        @foreach (var p in _pacientes)
+                        {
+                            <option value="@p.Id">@p.Nombre @p.Apellidos</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Título</label>
+                    <input @bind="_nuevoInforme.Titulo" placeholder="Título del informe" />
+                </div>
+
+                <div class="form-group form-group--full">
+                    <label>Contenido</label>
+                    <textarea @bind="_nuevoInforme.Contenido" rows="6" placeholder="Escribe el contenido del informe..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-secondary" @onclick="CerrarFormulario">Cancelar</button>
+                <button class="btn-primary" @onclick="GuardarInforme" disabled="@_guardando">
+                    @(_guardando ? "Guardando..." : "Guardar")
+                </button>
+            </div>
+        </div>
+    }
+
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-card__label">Total informes</div>
+            <div class="stat-card__value">@_todosInformes.Count</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card__label">Pacientes con informes</div>
+            <div class="stat-card__value">@_todosInformes.Select(i => i.PacienteId).Distinct().Count()</div>
+        </div>
+    </div>
+
+    <div class="page-card">
+        <h3>Listado de informes</h3>
+        <table class="page-table">
+            <thead>
+                <tr>
+                    <th>Paciente</th>
+                    <th>Título</th>
+                    <th>Profesional</th>
+                    <th>Fecha</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!_informesFiltrados.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="page-empty-cell">No hay informes registrados.</td>
+                    </tr>
+                }
+
+                @foreach (var inf in _informesFiltrados)
+                {
+                    <tr>
+                        <td><strong>@(inf.NombrePaciente ?? "—")</strong></td>
+                        <td>@inf.Titulo</td>
+                        <td>@(inf.NombreProfesional ?? "—")</td>
+                        <td>@inf.FechaEmisionUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                        <td style="display:flex;gap:6px;">
+                            <button class="btn-sm btn-sm--primary" @onclick="() => VerDetalle(inf)">
+                                @(_informeDetalle?.Id == inf.Id ? "Cerrar" : "Ver")
+                            </button>
+                            <button class="btn-sm btn-sm--danger" @onclick="() => EliminarInforme(inf.Id)">
+                                Eliminar
+                            </button>
+                        </td>
+                    </tr>
+
+                    @if (_informeDetalle?.Id == inf.Id)
+                    {
+                        <tr>
+                            <td colspan="5">
+                                <div class="detail-panel">
+                                    <h4>@inf.Titulo</h4>
+                                    <p style="font-size:13px;color:#6b7280;margin-bottom:8px;">
+                                        Paciente: <strong>@(inf.NombrePaciente ?? "—")</strong> ·
+                                        Fecha: @inf.FechaEmisionUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                                    </p>
+                                    <div style="white-space:pre-wrap;font-size:14px;color:#374151;line-height:1.6;">@(inf.Contenido ?? "Sin contenido.")</div>
+                                    @if (!string.IsNullOrWhiteSpace(inf.ArchivoUrl))
+                                    {
+                                        <p style="margin-top:12px;">
+                                            <a href="@inf.ArchivoUrl" target="_blank" class="btn-sm btn-sm--primary">📎 Descargar archivo</a>
+                                        </p>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    [Inject] private InformesApiService InformesApi { get; set; } = default!;
+    [Inject] private PacientesApiService PacientesApi { get; set; } = default!;
+
+    [SupplyParameterFromQuery(Name = "pacienteId")]
+    public long? PacienteId { get; set; }
+
+    private long? _profesionalId;
+    private long? _pacienteIdProcesado;
+    private List<InformeDto> _todosInformes = new();
+    private List<PacienteDto> _pacientes = new();
+    private CrearInformeRequest _nuevoInforme = new();
+    private string _busqueda = string.Empty;
+    private string _mensaje = string.Empty;
+    private bool _esError;
+    private bool _mostrarFormulario;
+    private bool _guardando;
+    private InformeDto? _editando;
+    private InformeDto? _informeDetalle;
+
+    private IEnumerable<InformeDto> _informesFiltrados =>
+        string.IsNullOrWhiteSpace(_busqueda)
+            ? _todosInformes
+            : _todosInformes.Where(i =>
+                (i.NombrePaciente ?? "").Contains(_busqueda, StringComparison.OrdinalIgnoreCase) ||
+                i.Titulo.Contains(_busqueda, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        _profesionalId = await SessionService.GetProfesionalId();
+
+        try
+        {
+            _pacientes = await PacientesApi.GetAllAsync();
+        }
+        catch
+        {
+        }
+
+        await CargarTodosInformes();
+    }
+
+    protected override Task OnParametersSetAsync()
+    {
+        if (PacienteId.HasValue && PacienteId.Value > 0 && _pacienteIdProcesado != PacienteId.Value)
+        {
+            AbrirFormularioParaPaciente(PacienteId.Value);
+            _pacienteIdProcesado = PacienteId.Value;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private async Task CargarTodosInformes()
+    {
+        _todosInformes.Clear();
+
+        try
+        {
+            foreach (var p in _pacientes)
+            {
+                var informes = await InformesApi.GetByPacienteAsync(p.Id);
+                _todosInformes.AddRange(informes);
+            }
+
+            _todosInformes = _todosInformes
+                .OrderByDescending(i => i.FechaEmisionUtc)
+                .ToList();
+        }
+        catch
+        {
+        }
+    }
+
+    private void AbrirFormulario()
+    {
+        _editando = null;
+        _nuevoInforme = new CrearInformeRequest();
+        _mostrarFormulario = true;
+        _mensaje = string.Empty;
+        _esError = false;
+    }
+
+    private void AbrirFormularioParaPaciente(long pacienteId)
+    {
+        _editando = null;
+        _nuevoInforme = new CrearInformeRequest
+        {
+            PacienteId = pacienteId,
+            Titulo = string.Empty,
+            Contenido = string.Empty
+        };
+        _mostrarFormulario = true;
+        _mensaje = string.Empty;
+        _esError = false;
+    }
+
+    private void CerrarFormulario()
+    {
+        _mostrarFormulario = false;
+        _editando = null;
+        _nuevoInforme = new CrearInformeRequest();
+
+        if (PacienteId.HasValue)
+        {
+            Navigation.NavigateTo("/informes", false);
+        }
+    }
+
+    private async Task GuardarInforme()
+    {
+        if (_nuevoInforme.PacienteId == 0)
+        {
+            _mensaje = "Selecciona un paciente.";
+            _esError = true;
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(_nuevoInforme.Titulo))
+        {
+            _mensaje = "Introduce un título.";
+            _esError = true;
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(_nuevoInforme.Contenido))
+        {
+            _mensaje = "Introduce el contenido del informe.";
+            _esError = true;
+            return;
+        }
+
+        _guardando = true;
+
+        try
+        {
+            if (_profesionalId is null or 0)
+            {
+                _mensaje = "No se pudo identificar al profesional. Inicia sesión de nuevo.";
+                _esError = true;
+                return;
+            }
+
+            _nuevoInforme.ProfesionalId = _profesionalId.Value;
+
+            var (ok, error) = await InformesApi.CrearAsync(_nuevoInforme);
+
+            if (ok)
+            {
+                _mensaje = "Informe creado correctamente.";
+                _esError = false;
+                CerrarFormulario();
+                await CargarTodosInformes();
+            }
+            else
+            {
+                _mensaje = $"Error: {error}";
+                _esError = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            _mensaje = $"Error: {ex.Message}";
+            _esError = true;
+        }
+        finally
+        {
+            _guardando = false;
+        }
+    }
+
+    private async Task EliminarInforme(long id)
+    {
+        var ok = await InformesApi.EliminarAsync(id);
+
+        if (ok)
+        {
+            _todosInformes.RemoveAll(i => i.Id == id);
+
+            if (_informeDetalle?.Id == id)
+                _informeDetalle = null;
+
+            _mensaje = "Informe eliminado.";
+            _esError = false;
+        }
+        else
+        {
+            _mensaje = "No se pudo eliminar el informe.";
+            _esError = true;
+        }
+    }
+
+    private void VerDetalle(InformeDto informe)
+    {
+        _informeDetalle = _informeDetalle?.Id == informe.Id ? null : informe;
+    }
+}

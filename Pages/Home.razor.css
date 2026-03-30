@@ -281,8 +281,26 @@
     line-height: 1.6;
 }
 
-.access-card.btn {
+.access-card .btn {
     margin-top: 1.2rem;
+}
+
+.access-card {
+    transition: transform .2s, box-shadow .2s;
+}
+
+.access-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.10);
+}
+
+.benefit-card {
+    transition: transform .2s, box-shadow .2s;
+}
+
+.benefit-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.10);
 }
 
 @media(max-width: 1000px) {

@@ -34,9 +34,9 @@ public class PacientesApiService
         return (false, $"{(int)response.StatusCode} – {body}");
     }
 
-    public async Task<(bool Ok, string? Error)> ActualizarAsync(PacienteDto paciente)
+    public async Task<(bool Ok, string? Error)> ActualizarAsync(long id, PacienteDto paciente)
     {
-        var response = await _http.PutAsJsonAsync($"/api/pacientes/{paciente.Id}", paciente);
+        var response = await _http.PutAsJsonAsync($"/api/pacientes/{id}", paciente);
 
         if (response.IsSuccessStatusCode)
             return (true, null);

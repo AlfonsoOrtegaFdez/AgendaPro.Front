@@ -2,9 +2,11 @@
 @layout MainLayout
 @using AgendaFisio.Front.Componentes.Dashboard
 @using AgendaFisio.Front.Models
+@using AgendaFisio.Front.Services
 @inject SessionService SessionService
 @inject CitasApiService CitasApi
 @inject PacientesApiService PacientesApi
+@inject EstadoCitaCacheService EstadoCache
 
 <PageTitle>Dashboard Profesional | AgendaFisio</PageTitle>
 
@@ -214,6 +216,7 @@
     protected override async Task OnInitializedAsync()
     {
         _profesionalNombre = await SessionService.GetNombre() ?? "Profesional";
+        _profesionalLogueadoId = await SessionService.GetProfesionalId() ?? 1;
         await CargarCitas();
         await CargarPacientes();
     }
@@ -222,16 +225,21 @@
     {
         try
         {
+            DateTime desdeUtc, hastaUtc;
+
             if (_vistaActual == Vista.Diaria)
             {
-                _citas = await CitasApi.GetDiaAsync(FechaActual, null);
+                desdeUtc = DateTime.SpecifyKind(FechaActual.Date, DateTimeKind.Local).ToUniversalTime();
+                hastaUtc = DateTime.SpecifyKind(FechaActual.Date.AddDays(1), DateTimeKind.Local).ToUniversalTime();
             }
             else
             {
-                var desde = InicioSemana;
-                var hasta = InicioSemana.AddDays(7);
-                _citas = await CitasApi.GetSemanaAsync(desde, hasta, null);
+                desdeUtc = DateTime.SpecifyKind(InicioSemana, DateTimeKind.Local).ToUniversalTime();
+                hastaUtc = DateTime.SpecifyKind(InicioSemana.AddDays(7), DateTimeKind.Local).ToUniversalTime();
             }
+
+            _citas = await CitasApi.GetSemanaAsync(desdeUtc, hastaUtc, null);
+            await EstadoCache.AplicarCacheAsync(_citas);
 
             _mensaje = string.Empty;
             _esError = false;
@@ -323,8 +331,8 @@
                 PacienteId = _citaPacienteExistente && _citaPacienteId > 0 ? _citaPacienteId : null,
                 NombrePacienteTemporal = nombrePaciente,
                 TelefonoPacienteTemporal = telefonoPaciente,
-                FechaHoraInicioUtc = _citaInicio,
-                FechaHoraFinUtc = _citaFin,
+                FechaHoraInicioUtc = DateTime.SpecifyKind(_citaInicio, DateTimeKind.Local).ToUniversalTime(),
+                FechaHoraFinUtc = DateTime.SpecifyKind(_citaFin, DateTimeKind.Local).ToUniversalTime(),
                 Observaciones = string.IsNullOrWhiteSpace(_citaObservaciones)
                     ? null
                     : _citaObservaciones.Trim()
@@ -414,28 +422,34 @@
 
     private async Task CambiarEstadoCita((long CitaId, string NuevoEstado) args)
     {
+        var cita = _citas.FirstOrDefault(c => c.Id == args.CitaId);
+        if (cita is null) return;
+
+        var estadoAnterior = cita.Estado;
+        cita.Estado = args.NuevoEstado;
+
         try
         {
             var (ok, error) = await CitasApi.CambiarEstadoAsync(args.CitaId, args.NuevoEstado);
 
             if (ok)
             {
-                var cita = _citas.FirstOrDefault(c => c.Id == args.CitaId);
-                if (cita is not null)
-                    cita.Estado = args.NuevoEstado;
-
-                _mensaje = string.Empty;
+                await EstadoCache.EliminarEstadoAsync(args.CitaId);
+                _mensaje = $"Estado cambiado a {args.NuevoEstado}.";
                 _esError = false;
             }
             else
             {
-                _mensaje = $"No se pudo cambiar el estado: {error}";
+                // API falló, guardar en caché local como respaldo
+                await EstadoCache.GuardarEstadoAsync(args.CitaId, args.NuevoEstado);
+                _mensaje = $"Estado guardado localmente (API: {error})";
                 _esError = true;
             }
         }
-        catch (Exception ex)
+        catch
         {
-            _mensaje = $"Error al cambiar el estado: {ex.Message}";
+            await EstadoCache.GuardarEstadoAsync(args.CitaId, args.NuevoEstado);
+            _mensaje = "Sin conexión. Estado guardado localmente.";
             _esError = true;
         }
     }

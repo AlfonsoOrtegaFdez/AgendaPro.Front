@@ -119,15 +119,6 @@
     text-overflow: ellipsis;
 }
 
-.pro-appointment__phone[b-0fo85wfxij] {
-    font-size: .68rem;
-    line-height: 1.15;
-    opacity: .85;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 /* ── Estado colors ── */
 .pro-appointment--confirmada[b-0fo85wfxij] {
     background: #3b82f6;
@@ -145,8 +136,8 @@
 }
 
 .pro-appointment--completada[b-0fo85wfxij] {
-    background: #93c5fd;
-    color: #1e3a5f;
+    background: #22c55e;
+    color: #fff;
 }
 
 .pro-appointment--default[b-0fo85wfxij] {
@@ -155,41 +146,6 @@
 }
 
 .pro-appointment--noasistio[b-0fo85wfxij] {
-    background: #6b7280;
+    background: #f97316;
     color: #fff;
-}
-
-/* ── Estado menu ── */
-.pro-estado-menu[b-0fo85wfxij] {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-top: 6px;
-    padding: 6px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.18);
-    z-index: 10;
-}
-
-.pro-estado-menu__item[b-0fo85wfxij] {
-    border: none;
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-size: .7rem;
-    font-weight: 700;
-    cursor: pointer;
-    text-align: left;
-    transition: opacity .15s;
-}
-
-.pro-estado-menu__item:hover[b-0fo85wfxij] {
-    opacity: .85;
-}
-
-.pro-estado-overlay[b-0fo85wfxij] {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    background: transparent;
 }

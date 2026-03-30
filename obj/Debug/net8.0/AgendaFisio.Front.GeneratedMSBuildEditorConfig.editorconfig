@@ -38,8 +38,28 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50ZXNcQWdlbmRhXEFnZW5kYURheVZpZXcucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Configuracion.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29uZmlndXJhY2lvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/ConfiguracionBonos.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29uZmlndXJhY2lvbkJvbm9zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Facturacion.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRmFjdHVyYWNpb24ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Paciente/Historial.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFjaWVudGVcSGlzdG9yaWFsLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Paciente/Informes.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFjaWVudGVcSW5mb3JtZXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Weather.razor]
@@ -102,9 +122,13 @@ build_metadata.AdditionalFiles.CssScope = b-lbikwoartq
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-u1hj886qcr
 
-[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Pacientes.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFjaWVudGVzLnJhem9y
-build_metadata.AdditionalFiles.CssScope = b-5n3opg1hp0
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Paciente/PacienteDetalle.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFjaWVudGVcUGFjaWVudGVEZXRhbGxlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-eun8dfnded
+
+[C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Paciente/Pacientes.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFjaWVudGVcUGFjaWVudGVzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-2gkcxhdnd1
 
 [C:/Users/tathor/source/repos/AgendaFisio.Front/AgendaFisio.Front/Pages/Registro.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0cm8ucmF6b3I=

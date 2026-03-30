@@ -1,0 +1,302 @@
+﻿@page "/pacientes/{Id:long}"
+@page "/pacientes/{Id:long}/{Seccion}"
+@layout MainLayout
+@using AgendaFisio.Front.Models
+@inject PacientesApiService PacientesApi
+@inject CitasApiService CitasApi
+@inject InformesApiService InformesApi
+@inject NavigationManager Navigation
+
+<PageTitle>Ficha del paciente | AgendaFisio</PageTitle>
+
+<div class="paciente-detalle-page">
+    @if (_cargando)
+    {
+        <div class="estado-box">Cargando paciente...</div>
+    }
+    else if (!string.IsNullOrWhiteSpace(_mensajeError))
+    {
+        <div class="estado-box error">@_mensajeError</div>
+    }
+    else if (_paciente is null)
+    {
+        <div class="estado-box error">No se ha encontrado el paciente.</div>
+    }
+    else
+    {
+        <div class="detalle-topbar">
+            <button class="back-btn" @onclick="Volver">
+                ← Volver a pacientes
+            </button>
+        </div>
+
+        <div class="detalle-header card">
+            <div class="detalle-avatar">
+                @GetInitials(_paciente.Nombre, _paciente.Apellidos)
+            </div>
+
+            <div class="detalle-header-content">
+                <div class="detalle-header-title-row">
+                    <h1>@_paciente.Nombre @_paciente.Apellidos</h1>
+                    <button class="icon-btn" title="Editar paciente" @onclick="EditarPaciente">✎</button>
+                </div>
+
+                <div class="detalle-info-grid">
+                    <div><strong>Nº Pac:</strong> @_paciente.Id</div>
+                    <div><strong>F. Nac:</strong> @(_paciente.FechaNacimiento?.ToString("dd/MM/yyyy") ?? "—")</div>
+                    <div><strong>Tlf:</strong> @(_paciente.Telefono ?? "—")</div>
+                    <div><strong>Email:</strong> @(_paciente.Email ?? "—")</div>
+                    <div><strong>Alta:</strong> @(_paciente.CreatedAtUtc?.ToLocalTime().ToString("dd/MM/yyyy") ?? "—")</div>
+                    <div><strong>Estado:</strong> @(_paciente.Activo ? "Activo" : "Inactivo")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detalle-panels">
+            <div class="card panel">
+                <div class="panel-header">
+                    <h3>Alertas y observaciones</h3>
+                    <button class="icon-btn" title="Editar paciente" @onclick="EditarPaciente">✎</button>
+                </div>
+
+                <div class="panel-body">
+                    @if (string.IsNullOrWhiteSpace(_paciente.Observaciones))
+                    {
+                        <div class="empty-state">No hay observaciones registradas.</div>
+                    }
+                    else
+                    {
+                        <div class="texto-libre">@_paciente.Observaciones</div>
+                    }
+                </div>
+            </div>
+
+            <div class="card panel">
+                <div class="panel-header">
+                    <h3>Historial consultas</h3>
+                </div>
+
+                <div class="panel-body">
+                    @if (_consultas.Count == 0)
+                    {
+                        <div class="empty-state">No hay consultas registradas.</div>
+                    }
+                    else
+                    {
+                        <div class="timeline">
+                            @foreach (var cita in _consultas)
+                            {
+                                <div class="timeline-item">
+                                    <div class="timeline-date">
+                                        @cita.FechaHoraInicioUtc.ToLocalTime().ToString("dd/MM/yyyy")
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">
+                                            @(string.IsNullOrWhiteSpace(cita.PacienteNombre) ? "Consulta" : cita.PacienteNombre)
+                                        </div>
+                                        <div class="timeline-subtitle">
+                                            @cita.FechaHoraInicioUtc.ToLocalTime().ToString("HH:mm")
+                                            -
+                                            @cita.FechaHoraFinUtc.ToLocalTime().ToString("HH:mm")
+                                            ·
+                                            @(string.IsNullOrWhiteSpace(cita.Estado) ? "Sin estado" : cita.Estado)
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="card secciones-card">
+            <div class="secciones-nav">
+                <button class="seccion-btn @GetSeccionClass("informes")" @onclick='() => IrASeccion("informes")'>
+                    Informes
+                </button>
+
+                <button class="seccion-btn @GetSeccionClass("proteccion")" @onclick='() => IrASeccion("proteccion")'>
+                    Protección
+                </button>
+
+                <button class="seccion-btn @GetSeccionClass("justificantes")" @onclick='() => IrASeccion("justificantes")'>
+                    Justificantes
+                </button>
+            </div>
+
+            <div class="secciones-body">
+                @if (_seccionActual == "informes")
+                {
+                    <div class="section-header">
+                        <h3>Informes de @_paciente.Nombre @_paciente.Apellidos</h3>
+                        <button class="primary-btn" @onclick="IrAInformes">+ Nuevo informe</button>
+                    </div>
+
+                    @if (_informes.Count == 0)
+                    {
+                        <div class="empty-state">No hay informes registrados para este paciente.</div>
+                    }
+                    else
+                    {
+                        <div class="listado-simple">
+                            @foreach (var informe in _informes.OrderByDescending(x => x.FechaEmisionUtc))
+                            {
+                                <div class="listado-item">
+                                    <div>
+                                        <div class="item-title">@informe.Titulo</div>
+                                        <div class="item-subtitle">
+                                            @informe.FechaEmisionUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                                        </div>
+                                        @if (!string.IsNullOrWhiteSpace(informe.Contenido))
+                                        {
+                                            <div class="item-preview">
+                                                @RecortarTexto(informe.Contenido, 180)
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+                else if (_seccionActual == "proteccion")
+                {
+                    <div class="section-header">
+                        <h3>Protección de @_paciente.Nombre @_paciente.Apellidos</h3>
+                    </div>
+
+                    <div class="empty-state">
+                        Aquí puedes mostrar consentimientos, autorizaciones, RGPD y documentación de protección de datos del paciente.
+                    </div>
+                }
+                else if (_seccionActual == "justificantes")
+                {
+                    <div class="section-header">
+                        <h3>Justificantes de @_paciente.Nombre @_paciente.Apellidos</h3>
+                    </div>
+
+                    <div class="empty-state">
+                        Aquí puedes mostrar los justificantes emitidos para este paciente.
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public long Id { get; set; }
+    [Parameter] public string? Seccion { get; set; }
+
+    private PacienteDto? _paciente;
+    private List<DashboardCitaDto> _consultas = new();
+    private List<InformeDto> _informes = new();
+
+    private bool _cargando = true;
+    private string _mensajeError = string.Empty;
+    private string _seccionActual = "informes";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _seccionActual = NormalizarSeccion(Seccion);
+
+        if (_paciente is null || _paciente.Id != Id)
+            await CargarDatosAsync();
+    }
+
+    private async Task CargarDatosAsync()
+    {
+        _cargando = true;
+        _mensajeError = string.Empty;
+
+        try
+        {
+            _paciente = await PacientesApi.GetByIdAsync(Id);
+
+            if (_paciente is null)
+            {
+                _mensajeError = "Paciente no encontrado.";
+                return;
+            }
+
+            var hoy = DateTime.UtcNow;
+            var desde = hoy.AddYears(-3);
+            var hasta = hoy.AddDays(1);
+
+            var citas = await CitasApi.GetSemanaAsync(desde, hasta);
+            _consultas = citas
+                .Where(c => c.PacienteId == Id)
+                .OrderByDescending(c => c.FechaHoraInicioUtc)
+                .Take(20)
+                .ToList();
+
+            _informes = await InformesApi.GetByPacienteAsync(Id);
+        }
+        catch (Exception ex)
+        {
+            _mensajeError = $"No se pudo cargar la ficha del paciente: {ex.Message}";
+        }
+        finally
+        {
+            _cargando = false;
+        }
+    }
+
+    private void IrASeccion(string seccion)
+    {
+        Navigation.NavigateTo($"/pacientes/{Id}/{seccion}");
+    }
+
+    private string GetSeccionClass(string seccion)
+    {
+        return _seccionActual == seccion ? "active" : string.Empty;
+    }
+
+    private static string NormalizarSeccion(string? seccion)
+    {
+        if (string.IsNullOrWhiteSpace(seccion))
+            return "informes";
+
+        var valor = seccion.Trim().ToLowerInvariant();
+
+        return valor switch
+        {
+            "informes" => "informes",
+            "proteccion" => "proteccion",
+            "justificantes" => "justificantes",
+            _ => "informes"
+        };
+    }
+
+    private void Volver()
+    {
+        Navigation.NavigateTo("/pacientes");
+    }
+
+    private void EditarPaciente()
+    {
+        Navigation.NavigateTo("/pacientes");
+    }
+
+    private void IrAInformes()
+    {
+        Navigation.NavigateTo($"/informes?pacienteId={Id}");
+    }
+
+    private static string GetInitials(string nombre, string apellidos)
+    {
+        var n = string.IsNullOrWhiteSpace(nombre) ? "" : nombre.Trim()[0].ToString().ToUpper();
+        var a = string.IsNullOrWhiteSpace(apellidos) ? "" : apellidos.Trim()[0].ToString().ToUpper();
+        return $"{n}{a}";
+    }
+
+    private static string RecortarTexto(string texto, int max)
+    {
+        if (string.IsNullOrWhiteSpace(texto))
+            return string.Empty;
+
+        var limpio = texto.Trim();
+        return limpio.Length <= max ? limpio : limpio[..max] + "...";
+    }
+}
